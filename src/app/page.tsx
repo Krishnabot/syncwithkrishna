@@ -37,7 +37,7 @@ export default function Home() {
             {recentPosts.map((post) => (
               <article key={`${post.category}-${post.slug}`} className="group">
                 <Link 
-                  href={`/${post.category}/${post.slug}`}
+                  href={`/posts/${post.category}/${post.slug}`}
                   className="block p-6 rounded-lg border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-200"
                   key={`${post.category}-${post.slug}`}
                 >
