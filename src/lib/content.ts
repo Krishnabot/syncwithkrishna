@@ -87,6 +87,12 @@ export function paginate<T>(items: T[], page: number, pageSize: number): { total
   return { totalPages, slice: items.slice(start, start + pageSize) };
 }
 
+export function sortPosts(posts: Post[], order: 'asc' | 'desc' = 'desc'): Post[] {
+  const arr = [...posts];
+  arr.sort((a, b) => (order === 'asc' ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date)));
+  return arr;
+}
+
 export function getAllPostSlugs(): { category: string; slug: string }[] {
   const categories = ['journals', 'essays', 'poems'];
   const slugs: { category: string; slug: string }[] = [];
