@@ -1,20 +1,24 @@
-import { getSortedPostsData, paginate } from '@/lib/content';
+import { getSortedPostsData, paginate, sortPosts } from '@/lib/content';
 import PostCard from '@/components/PostCard';
 import Pagination from '@/components/Pagination';
+import SortDropdown from '@/components/SortDropdown';
 
-export default function AllPostsPage() {
-  const posts = getSortedPostsData();
+export default function AllPostsPage({ searchParams }: { searchParams?: { sort?: string } }) {
+  const order = (searchParams?.sort === 'asc' ? 'asc' : 'desc') as 'asc' | 'desc';
+  const posts = sortPosts(getSortedPostsData(), order);
   const { slice, totalPages } = paginate(posts, 1, 12);
   return (
     <div>
-      <h1 className="page-title">All Posts</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="page-title">All Posts</h1>
+        <SortDropdown order={order} basePath="/posts" />
+      </div>
       <div className="grid-cards">
         {slice.map((post) => (
           <PostCard key={`${post.category}-${post.slug}`} post={post} />
         ))}
       </div>
-      <Pagination currentPage={1} totalPages={totalPages} basePath="/posts" />
+      <Pagination currentPage={1} totalPages={totalPages} basePath="/posts" query={{ sort: order }} />
     </div>
   );
 }
-
