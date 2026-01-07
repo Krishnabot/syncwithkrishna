@@ -10,6 +10,7 @@ export interface Post {
   tags: string[];
   excerpt: string;
   content: string;
+  draft?: boolean;
 }
 
 const postsDirectory = path.join(process.cwd(), 'content/posts');
@@ -42,9 +43,10 @@ export function getSortedPostsData(): Post[] {
             tags: matterResult.data.tags || [],
             excerpt: matterResult.data.excerpt,
             content: matterResult.content,
+            draft: !!matterResult.data.draft,
           };
-          
-          allPosts.push(post);
+
+          if (!post.draft) allPosts.push(post);
         }
       });
     }
@@ -58,6 +60,37 @@ export function getSortedPostsData(): Post[] {
       return -1;
     }
   });
+}
+
+export function getSortedPostsDataIncludeDrafts(): Post[] {
+  const categories = ['journals', 'essays', 'poems'];
+  const allPosts: Post[] = [];
+  categories.forEach(category => {
+    const categoryPath = path.join(postsDirectory, category);
+    if (fs.existsSync(categoryPath)) {
+      const fileNames = fs.readdirSync(categoryPath);
+      fileNames.forEach(fileName => {
+        if (fileName.endsWith('.md')) {
+          const slug = fileName.replace(/\.md$/, '');
+          const fullPath = path.join(categoryPath, fileName);
+          const fileContents = fs.readFileSync(fullPath, 'utf8');
+          const matterResult = matter(fileContents);
+          const post: Post = {
+            slug,
+            title: matterResult.data.title,
+            date: matterResult.data.date,
+            category: category.slice(0, -1) as 'journal' | 'essay' | 'poem',
+            tags: matterResult.data.tags || [],
+            excerpt: matterResult.data.excerpt,
+            content: matterResult.content,
+            draft: !!matterResult.data.draft,
+          };
+          allPosts.push(post);
+        }
+      });
+    }
+  });
+  return allPosts.sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
 export function getPostsByCategory(category: 'journal' | 'essay' | 'poem'): Post[] {
@@ -148,7 +181,12 @@ export async function getPostData(category: string, slug: string): Promise<Post>
     tags: matterResult.data.tags || [],
     excerpt: matterResult.data.excerpt,
     content: matterResult.content,
+    draft: !!matterResult.data.draft,
   };
 
   return post;
+}
+
+export function getDraftPosts(): Post[] {
+  return getSortedPostsDataIncludeDrafts().filter(p => p.draft);
 }
