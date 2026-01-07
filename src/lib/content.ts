@@ -1,8 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { remark } from 'remark';
-import html from 'remark-html';
 
 export interface Post {
   slug: string;
@@ -107,11 +105,7 @@ export async function getPostData(category: string, slug: string): Promise<Post>
   // Use gray-matter to parse the post metadata section
   const matterResult = matter(fileContents);
 
-  // Use remark to convert markdown into HTML string
-  const processedContent = await remark()
-    .use(html)
-    .process(matterResult.content);
-  const contentHtml = processedContent.toString();
+  // Keep raw MDX content; render in page using next-mdx-remote
 
   const post: Post = {
     slug,
@@ -120,7 +114,7 @@ export async function getPostData(category: string, slug: string): Promise<Post>
     category: category as 'journal' | 'essay' | 'poem',
     tags: matterResult.data.tags || [],
     excerpt: matterResult.data.excerpt,
-    content: contentHtml,
+    content: matterResult.content,
   };
 
   return post;

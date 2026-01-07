@@ -1,7 +1,10 @@
 import { getPostData, getAllPostSlugs } from '@/lib/content';
 import { format } from 'date-fns';
 import Link from 'next/link';
-import './post-styles.css';
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import remarkGfm from 'remark-gfm';
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 
 export async function generateStaticParams() {
   return getAllPostSlugs();
@@ -52,10 +55,17 @@ export default async function PostPage({
             </div>
           </div>
 
-          <div 
-            className="markdown-content"
-            dangerouslySetInnerHTML={{ __html: post.content }}
-          />
+          <div className="prose prose-lg max-w-none">
+            <MDXRemote 
+              source={post.content}
+              options={{
+                mdxOptions: {
+                  remarkPlugins: [remarkGfm],
+                  rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+                },
+              }}
+            />
+          </div>
         </article>
 
         <div className="border-t border-gray-200 pt-8">
@@ -81,4 +91,3 @@ export default async function PostPage({
     </div>
   );
 }
-
