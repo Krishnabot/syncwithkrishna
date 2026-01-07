@@ -12,9 +12,9 @@ export default function JournalListPage() {
           <article key={post.slug} className="group">
             <Link href={`/posts/journal/${post.slug}`} className="card">
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-sm font-medium text-blue-600">Journal</span>
-                <span className="text-gray-400">•</span>
-                <time className="text-sm text-gray-500">
+                <span className="text-sm font-medium text-blue-600 dark:text-blue-400">Journal</span>
+                <span className="meta-sep">•</span>
+                <time className="meta-time">
                   {format(new Date(post.date), 'MMMM d, yyyy')}
                 </time>
               </div>

@@ -7,7 +7,7 @@ export default function Home() {
   const recentPosts = allPosts.slice(0, 5);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div>
       {/* Hero Section */}
       <section className="mb-16">
         <h1 className="page-title">
@@ -32,11 +32,11 @@ export default function Home() {
                 key={`${post.category}-${post.slug}`}
               >
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-sm font-medium text-blue-600 capitalize">
+                  <span className="text-sm font-medium text-blue-600 dark:text-blue-400 capitalize">
                     {post.category}
                   </span>
-                  <span className="text-gray-400">•</span>
-                  <time className="text-sm text-gray-500">
+                  <span className="meta-sep">•</span>
+                  <time className="meta-time">
                     {format(new Date(post.date), 'MMMM d, yyyy')}
                   </time>
                 </div>

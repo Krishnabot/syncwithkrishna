@@ -32,25 +32,20 @@ export default async function PostPage({
         <article className="mb-12">
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-4">
-              <span className="text-sm font-medium text-blue-600 capitalize">
+              <span className="text-sm font-medium text-blue-600 dark:text-blue-400 capitalize">
                 {post.category}
               </span>
-              <span className="text-gray-400">•</span>
-              <time className="text-sm text-gray-500">
+              <span className="meta-sep">•</span>
+              <time className="meta-time">
                 {format(new Date(post.date), 'MMMM d, yyyy')}
               </time>
             </div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="page-title">
               {post.title}
             </h1>
             <div className="flex flex-wrap gap-2">
               {post.tags.map((tag) => (
-                <span 
-                  key={tag}
-                  className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
-                >
-                  {tag}
-                </span>
+                <span key={tag} className="tag">{tag}</span>
               ))}
             </div>
           </div>
