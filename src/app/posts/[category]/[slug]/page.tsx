@@ -1,16 +1,8 @@
 import { getPostData, getAllPostSlugs } from '@/lib/content';
 import { format } from 'date-fns';
 import Link from 'next/link';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import remarkGfm from 'remark-gfm';
-import rehypeSlug from 'rehype-slug';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import Callout from '@/components/mdx/Callout';
-import Quote from '@/components/mdx/Quote';
-import Divider from '@/components/mdx/Divider';
-import Button from '@/components/mdx/Button';
-import Stanza from '@/components/mdx/Stanza';
-import Line from '@/components/mdx/Line';
+import ContentRenderer from '@/components/ContentRenderer';
+import PostHeader from '@/components/PostHeader';
 import type { Metadata } from 'next';
 
 export async function generateStaticParams() {
@@ -60,27 +52,9 @@ export default async function PostPage({
   return (
     <>
       <article className="mb-12">
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="text-sm font-medium text-blue-600 dark:text-blue-400 capitalize">
-              {post.category}
-            </span>
-            <span className="meta-sep">•</span>
-            <time className="meta-time">
-              {format(new Date(post.date), 'MMMM d, yyyy')}
-            </time>
-          </div>
-          <h1 className="page-title">
-            {post.title}
-          </h1>
-          <div className="flex flex-wrap gap-2">
-            {post.tags.map((tag) => (
-              <span key={tag} className="tag">{tag}</span>
-            ))}
-          </div>
-        </div>
+        <PostHeader post={post} />
 
-        <div className={`prose-content ${post.category === 'poem' ? 'poem-content' : ''}`}>
+        <div>
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
@@ -97,16 +71,7 @@ export default async function PostPage({
               }),
             }}
           />
-          <MDXRemote 
-            source={post.content}
-            options={{
-              mdxOptions: {
-                remarkPlugins: [remarkGfm],
-                rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
-              },
-            }}
-            components={{ Callout, Quote, Divider, Button, Stanza, Line }}
-          />
+          <ContentRenderer source={post.content} isPoem={post.category === 'poem'} />
         </div>
       </article>
 
