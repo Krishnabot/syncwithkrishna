@@ -16,6 +16,7 @@ export default function Header() {
             <Link href="/posts/journal" className="nav-link">Journals</Link>
             <Link href="/posts/essay" className="nav-link">Essays</Link>
             <Link href="/posts/poem" className="nav-link">Poems</Link>
+            <Link href="/tags" className="nav-link">Tags</Link>
           </nav>
           <ThemeToggle />
         </div>
