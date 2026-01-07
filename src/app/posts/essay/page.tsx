@@ -1,4 +1,5 @@
 import { getPostsByCategory, paginate, sortPosts } from '@/lib/content';
+import type { Metadata } from 'next';
 import PostCard from '@/components/PostCard';
 import Pagination from '@/components/Pagination';
 import SortDropdown from '@/components/SortDropdown';
@@ -22,3 +23,10 @@ export default function EssayListPage({ searchParams }: { searchParams?: { sort?
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: 'Essays',
+  description: 'Essays exploring ideas and reflections',
+  alternates: { canonical: '/posts/essay' },
+  openGraph: { title: 'Essays', description: 'Essays exploring ideas and reflections', url: '/posts/essay' },
+};

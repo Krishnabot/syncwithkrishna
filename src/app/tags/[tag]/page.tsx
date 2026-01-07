@@ -2,6 +2,7 @@ import { getAllTags, getPostsByTag, paginate, sortPosts } from '@/lib/content';
 import PostCard from '@/components/PostCard';
 import Pagination from '@/components/Pagination';
 import SortDropdown from '@/components/SortDropdown';
+import type { Metadata } from 'next';
 type TagParams = { tag: string };
 function isPromise<T>(obj: unknown): obj is Promise<T> {
   return !!obj && typeof (obj as { then?: unknown }).then === 'function';
@@ -32,3 +33,8 @@ export default async function TagPage({ params, searchParams }: { params: TagPar
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: 'Tag Archive',
+  description: 'Browse posts by tag',
+};

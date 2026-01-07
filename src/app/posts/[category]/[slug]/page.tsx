@@ -11,9 +11,42 @@ import Divider from '@/components/mdx/Divider';
 import Button from '@/components/mdx/Button';
 import Stanza from '@/components/mdx/Stanza';
 import Line from '@/components/mdx/Line';
+import type { Metadata } from 'next';
 
 export async function generateStaticParams() {
   return getAllPostSlugs();
+}
+
+type Params = { category: string; slug: string } | Promise<{ category: string; slug: string }>;
+function isPromise<T>(obj: unknown): obj is Promise<T> { return !!obj && typeof (obj as { then?: unknown }).then === 'function'; }
+
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const p = isPromise(params) ? await params : params;
+  const { category, slug } = p;
+  const post = await getPostData(category, slug);
+  const url = process.env.SITE_URL || 'http://localhost:3000';
+  const canonical = `${url}/posts/${post.category}/${post.slug}`;
+  const title = post.title;
+  const description = post.excerpt;
+  return {
+    title,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      type: 'article',
+      url: canonical,
+      title,
+      description,
+      siteName: 'Personal Blog',
+      publishedTime: new Date(post.date).toISOString(),
+      tags: post.tags,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+  };
 }
 
 export default async function PostPage({
@@ -48,6 +81,22 @@ export default async function PostPage({
         </div>
 
         <div className={`prose-content ${post.category === 'poem' ? 'poem-content' : ''}`}>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'Article',
+                headline: post.title,
+                datePublished: new Date(post.date).toISOString(),
+                dateModified: new Date(post.date).toISOString(),
+                author: { '@type': 'Person', name: 'Krishna' },
+                description: post.excerpt,
+                keywords: (post.tags || []).join(', '),
+                mainEntityOfPage: `${process.env.SITE_URL || 'http://localhost:3000'}/posts/${post.category}/${post.slug}`,
+              }),
+            }}
+          />
           <MDXRemote 
             source={post.content}
             options={{

@@ -16,8 +16,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Personal Blog",
-  description: "Journals, essays, poems — a personal writing space",
+  metadataBase: new URL(process.env.SITE_URL || 'http://localhost:3000'),
+  title: {
+    default: 'Personal Blog',
+    template: '%s · Personal Blog',
+  },
+  description: 'Journals, essays, poems — a personal writing space',
+  openGraph: {
+    type: 'website',
+    title: 'Personal Blog',
+    description: 'Journals, essays, poems — a personal writing space',
+    url: '/',
+    siteName: 'Personal Blog',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Personal Blog',
+    description: 'Journals, essays, poems — a personal writing space',
+  },
+  alternates: { canonical: '/' },
 };
 
 export default async function RootLayout({

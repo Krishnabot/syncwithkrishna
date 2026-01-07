@@ -1,4 +1,5 @@
 import { getPostsByCategory, paginate, sortPosts } from '@/lib/content';
+import type { Metadata } from 'next';
 import PostCard from '@/components/PostCard';
 import Pagination from '@/components/Pagination';
 import SortDropdown from '@/components/SortDropdown';
@@ -22,3 +23,10 @@ export default function PoemListPage({ searchParams }: { searchParams?: { sort?:
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: 'Poems',
+  description: 'Poetry collection — verses and stanzas',
+  alternates: { canonical: '/posts/poem' },
+  openGraph: { title: 'Poems', description: 'Poetry collection — verses and stanzas', url: '/posts/poem' },
+};

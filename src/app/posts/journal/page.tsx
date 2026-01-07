@@ -1,4 +1,5 @@
 import { getPostsByCategory, paginate, sortPosts } from '@/lib/content';
+import type { Metadata } from 'next';
 import PostCard from '@/components/PostCard';
 import Pagination from '@/components/Pagination';
 import SortDropdown from '@/components/SortDropdown';
@@ -22,3 +23,10 @@ export default function JournalListPage({ searchParams }: { searchParams?: { sor
     </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: 'Journals',
+  description: 'Journal entries in chronological order',
+  alternates: { canonical: '/posts/journal' },
+  openGraph: { title: 'Journals', description: 'Journal entries in chronological order', url: '/posts/journal' },
+};
