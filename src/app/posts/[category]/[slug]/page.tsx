@@ -55,7 +55,7 @@ export default async function PostPage({
             </div>
           </div>
 
-          <div className="prose prose-lg max-w-none">
+          <div className="prose-content">
             <MDXRemote 
               source={post.content}
               options={{

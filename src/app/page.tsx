@@ -10,10 +10,10 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="mb-16">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+        <h1 className="page-title">
           Welcome to my personal space
         </h1>
-        <p className="text-xl text-gray-600 leading-relaxed">
+        <p className="page-subtitle">
           This is where I share my daily thoughts, reflections, and creative writing.
           You&apos;ll find journals documenting my journey, essays exploring ideas that matter,
           and poems capturing moments of beauty and introspection.
@@ -22,13 +22,13 @@ export default function Home() {
 
       {/* Recent Posts */}
       <section>
-        <h2 className="text-2xl font-bold text-gray-900 mb-8">Recent Posts</h2>
+        <h2 className="section-title">Recent Posts</h2>
         <div className="space-y-8">
           {recentPosts.map((post) => (
             <article key={`${post.category}-${post.slug}`} className="group">
               <Link 
                 href={`/posts/${post.category}/${post.slug}`}
-                className="block p-6 rounded-lg border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all duration-200"
+                className="card"
                 key={`${post.category}-${post.slug}`}
               >
                 <div className="flex items-center gap-2 mb-3">
@@ -40,20 +40,15 @@ export default function Home() {
                     {format(new Date(post.date), 'MMMM d, yyyy')}
                   </time>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                <h3 className="card-title">
                   {post.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="card-subtitle">
                   {post.excerpt}
                 </p>
                 <div className="flex flex-wrap gap-2 mt-4">
                   {post.tags.map((tag) => (
-                    <span 
-                      key={tag}
-                      className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
-                    >
-                      {tag}
-                    </span>
+                    <span key={tag} className="tag">{tag}</span>
                   ))}
                 </div>
               </Link>
@@ -65,10 +60,7 @@ export default function Home() {
       {/* View All Posts */}
       {allPosts.length > 5 && (
         <div className="mt-12 text-center">
-          <Link 
-            href="/posts"
-            className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
-          >
+          <Link href="/posts" className="btn btn-primary">
             View All Posts
             <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
