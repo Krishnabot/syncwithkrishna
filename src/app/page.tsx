@@ -1,10 +1,10 @@
 import { getSortedPostsData } from '@/lib/content';
-import { format } from 'date-fns';
+import PostCard from '@/components/PostCard';
 import Link from 'next/link';
 
 export default function Home() {
   const allPosts = getSortedPostsData();
-  const recentPosts = allPosts.slice(0, 5);
+  const recentPosts = allPosts.slice(0, 6);
 
   return (
     <div>
@@ -22,37 +22,10 @@ export default function Home() {
 
       {/* Recent Posts */}
       <section>
-        <h2 className="section-title">Recent Posts</h2>
-        <div className="space-y-8">
+        <h2 className="section-title">Latest Posts</h2>
+        <div className="grid-cards">
           {recentPosts.map((post) => (
-            <article key={`${post.category}-${post.slug}`} className="group">
-              <Link 
-                href={`/posts/${post.category}/${post.slug}`}
-                className="card"
-                key={`${post.category}-${post.slug}`}
-              >
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-sm font-medium text-blue-600 dark:text-blue-400 capitalize">
-                    {post.category}
-                  </span>
-                  <span className="meta-sep">•</span>
-                  <time className="meta-time">
-                    {format(new Date(post.date), 'MMMM d, yyyy')}
-                  </time>
-                </div>
-                <h3 className="card-title">
-                  {post.title}
-                </h3>
-                <p className="card-subtitle">
-                  {post.excerpt}
-                </p>
-                <div className="flex flex-wrap gap-2 mt-4">
-                  {post.tags.map((tag) => (
-                    <span key={tag} className="tag">{tag}</span>
-                  ))}
-                </div>
-              </Link>
-            </article>
+            <PostCard key={`${post.category}-${post.slug}`} post={post} />
           ))}
         </div>
       </section>
