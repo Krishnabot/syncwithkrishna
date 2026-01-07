@@ -1,20 +1,25 @@
+"use client";
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+const ThemeToggle = dynamic(() => import('./ThemeToggle'), { ssr: false });
 
 export default function Header() {
   return (
-    <header className="border-b border-gray-200 bg-white/90 backdrop-blur">
-      <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold text-gray-900">
+    <header className="header">
+      <div className="container flex items-center justify-between py-4">
+        <Link href="/" className="site-title">
           Personal Blog
         </Link>
-        <nav className="flex items-center gap-6">
-          <Link href="/" className="text-gray-700 hover:text-blue-600">Home</Link>
-          <Link href="/posts/journal" className="text-gray-700 hover:text-blue-600">Journals</Link>
-          <Link href="/posts/essay" className="text-gray-700 hover:text-blue-600">Essays</Link>
-          <Link href="/posts/poem" className="text-gray-700 hover:text-blue-600">Poems</Link>
-        </nav>
+        <div className="flex items-center gap-4">
+          <nav className="flex items-center gap-6">
+            <Link href="/" className="nav-link">Home</Link>
+            <Link href="/posts/journal" className="nav-link">Journals</Link>
+            <Link href="/posts/essay" className="nav-link">Essays</Link>
+            <Link href="/posts/poem" className="nav-link">Poems</Link>
+          </nav>
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );
 }
-
