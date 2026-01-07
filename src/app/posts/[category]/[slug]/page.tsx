@@ -17,7 +17,6 @@ export default async function PostPage({
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
       <header className="border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 py-8">
           <Link href="/" className="text-blue-600 hover:text-blue-700 font-medium">
@@ -26,9 +25,7 @@ export default async function PostPage({
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 py-12">
-        {/* Post Header */}
         <article className="mb-12">
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-4">
@@ -55,14 +52,12 @@ export default async function PostPage({
             </div>
           </div>
 
-          {/* Post Content */}
           <div 
             className="markdown-content"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
         </article>
 
-        {/* Navigation */}
         <div className="border-t border-gray-200 pt-8">
           <Link 
             href="/"
@@ -76,7 +71,6 @@ export default async function PostPage({
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-gray-200 mt-20">
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="text-center text-gray-600">
@@ -87,3 +81,4 @@ export default async function PostPage({
     </div>
   );
 }
+

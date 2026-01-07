@@ -62,9 +62,9 @@ export function getSortedPostsData(): Post[] {
   });
 }
 
-export function getAllPostSlugs() {
+export function getAllPostSlugs(): { category: string; slug: string }[] {
   const categories = ['journals', 'essays', 'poems'];
-  const slugs: { params: { category: string; slug: string } }[] = [];
+  const slugs: { category: string; slug: string }[] = [];
 
   categories.forEach(category => {
     const categoryPath = path.join(postsDirectory, category);
@@ -76,10 +76,8 @@ export function getAllPostSlugs() {
         if (fileName.endsWith('.md')) {
           const slug = fileName.replace(/\.md$/, '');
           slugs.push({
-            params: {
-              category: category.slice(0, -1), // Remove 's' from category
-              slug,
-            },
+            category: category.slice(0, -1), // Remove 's' from category
+            slug,
           });
         }
       });
