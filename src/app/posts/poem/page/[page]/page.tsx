@@ -2,9 +2,10 @@ import { getPostsByCategory, paginate } from '@/lib/content';
 import PostCard from '@/components/PostCard';
 import Pagination from '@/components/Pagination';
 
-export default function PoemListPage() {
+export default function PoemListPage({ params }: { params: { page: string } }) {
+  const page = Number(params.page) || 1;
   const posts = getPostsByCategory('poem');
-  const { slice, totalPages } = paginate(posts, 1, 9);
+  const { slice, totalPages } = paginate(posts, page, 9);
   return (
     <div>
       <h1 className="page-title">Poems</h1>
@@ -13,7 +14,7 @@ export default function PoemListPage() {
           <PostCard key={post.slug} post={post} />
         ))}
       </div>
-      <Pagination currentPage={1} totalPages={totalPages} basePath="/posts/poem" />
+      <Pagination currentPage={page} totalPages={totalPages} basePath="/posts/poem" />
     </div>
   );
 }
