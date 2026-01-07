@@ -1,0 +1,105 @@
+/* Markdown Content Styles */
+.markdown-content h1 {
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 700; /* font-bold */
+  color: rgb(17 24 39); /* text-gray-900 */
+  margin-bottom: 1.5rem; /* mb-6 */
+  margin-top: 2rem; /* mt-8 */
+}
+
+.markdown-content h2 {
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 600; /* font-semibold */
+  color: rgb(17 24 39); /* text-gray-900 */
+  margin-bottom: 1rem; /* mb-4 */
+  margin-top: 1.5rem; /* mt-6 */
+}
+
+.markdown-content h3 {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 600; /* font-semibold */
+  color: rgb(17 24 39); /* text-gray-900 */
+  margin-bottom: 0.75rem; /* mb-3 */
+  margin-top: 1rem; /* mt-4 */
+}
+
+.markdown-content p {
+  color: rgb(55 65 81); /* text-gray-700 */
+  line-height: 1.625; /* leading-relaxed */
+  margin-bottom: 1rem; /* mb-4 */
+}
+
+.markdown-content blockquote {
+  border-left: 4px solid rgb(37 99 235); /* border-l-blue-600 */
+  padding-left: 1rem; /* pl-4 */
+  padding-top: 0.5rem; /* py-2 */
+  padding-bottom: 0.5rem;
+  margin-top: 1rem; /* my-4 */
+  margin-bottom: 1rem;
+  font-style: italic;
+  color: rgb(75 85 99); /* text-gray-600 */
+}
+
+.markdown-content ul, .markdown-content ol {
+  list-style-type: disc;
+  padding-left: 1.5rem; /* pl-6 */
+  margin-bottom: 1rem; /* mb-4 */
+}
+
+.markdown-content ol {
+  list-style-type: decimal;
+}
+
+.markdown-content li {
+  color: rgb(55 65 81); /* text-gray-700 */
+  margin-bottom: 0.5rem; /* space-y-2 */
+}
+
+.markdown-content a {
+  color: rgb(37 99 235); /* text-blue-600 */
+  text-decoration: underline;
+}
+
+.markdown-content a:hover {
+  color: rgb(29 78 216); /* hover:text-blue-700 */
+}
+
+.markdown-content code {
+  background-color: rgb(243 244 246); /* bg-gray-100 */
+  padding-left: 0.25rem; /* px-1 */
+  padding-right: 0.25rem;
+  padding-top: 0.125rem; /* py-0.5 */
+  padding-bottom: 0.125rem;
+  border-radius: 0.25rem; /* rounded */
+  font-size: 0.875rem; /* text-sm */
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.markdown-content pre {
+  background-color: rgb(249 250 251); /* bg-gray-50 */
+  padding: 1rem; /* p-4 */
+  border-radius: 0.5rem; /* rounded-lg */
+  overflow-x: auto;
+  margin-top: 1rem; /* my-4 */
+  margin-bottom: 1rem;
+}
+
+.markdown-content pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.markdown-content hr {
+  border-color: rgb(229 231 235); /* border-gray-200 */
+  margin-top: 2rem; /* my-8 */
+  margin-bottom: 2rem;
+}
+
+.markdown-content strong {
+  font-weight: 600; /* font-semibold */
+  color: rgb(17 24 39); /* text-gray-900 */
+}
+
+.markdown-content em {
+  font-style: italic;
+}
