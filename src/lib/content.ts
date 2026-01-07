@@ -60,6 +60,33 @@ export function getSortedPostsData(): Post[] {
   });
 }
 
+export function getPostsByCategory(category: 'journal' | 'essay' | 'poem'): Post[] {
+  return getSortedPostsData().filter((p) => p.category === category);
+}
+
+export function getAllTags(): { tag: string; count: number }[] {
+  const map = new Map<string, number>();
+  for (const p of getSortedPostsData()) {
+    for (const tag of p.tags || []) {
+      map.set(tag, (map.get(tag) || 0) + 1);
+    }
+  }
+  return Array.from(map.entries())
+    .map(([tag, count]) => ({ tag, count }))
+    .sort((a, b) => a.tag.localeCompare(b.tag));
+}
+
+export function getPostsByTag(tag: string): Post[] {
+  const t = tag.toLowerCase();
+  return getSortedPostsData().filter((p) => (p.tags || []).some((x) => x.toLowerCase() === t));
+}
+
+export function paginate<T>(items: T[], page: number, pageSize: number): { totalPages: number; slice: T[] } {
+  const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
+  const start = (Math.max(1, page) - 1) * pageSize;
+  return { totalPages, slice: items.slice(start, start + pageSize) };
+}
+
 export function getAllPostSlugs(): { category: string; slug: string }[] {
   const categories = ['journals', 'essays', 'poems'];
   const slugs: { category: string; slug: string }[] = [];
