@@ -1,9 +1,9 @@
-import { getSortedPostsData } from '@/lib/content';
+import { getSortedPostsDataAsync } from '@/lib/content';
 import PostCard from '@/components/PostCard';
 import Link from 'next/link';
 
-export default function Home() {
-  const allPosts = getSortedPostsData();
+export default async function Home() {
+  const allPosts = await getSortedPostsDataAsync();
   const recentPosts = allPosts.slice(0, 6);
 
   return (

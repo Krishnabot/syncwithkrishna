@@ -1,10 +1,23 @@
 "use client";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import type { Post } from '@/lib/content';
+
+type Category = Post['category'];
+type FormState = {
+  slug: string;
+  title: string;
+  date: string;
+  category: Category;
+  tags: string;
+  excerpt: string;
+  content: string;
+  draft: boolean;
+};
 
 export default function NewPostPage() {
   const router = useRouter();
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<FormState>({
     slug: '',
     title: '',
     date: new Date().toISOString().slice(0, 10),
@@ -14,12 +27,12 @@ export default function NewPostPage() {
     content: '',
     draft: false,
   });
-  const update = (k: string, v: any) => setForm({ ...form, [k]: v });
+  const update = <K extends keyof FormState>(k: K, v: FormState[K]) => setForm({ ...form, [k]: v });
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const payload = {
       ...form,
-      tags: form.tags.split(',').map((t) => t.trim()).filter(Boolean),
+      tags: form.tags.split(',').map((t: string) => t.trim()).filter(Boolean),
     };
     const res = await fetch('/api/posts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     if (res.ok) router.push('/admin');
@@ -31,7 +44,7 @@ export default function NewPostPage() {
         <input className="select" placeholder="Slug" value={form.slug} onChange={(e) => update('slug', e.target.value)} required />
         <input className="select" placeholder="Title" value={form.title} onChange={(e) => update('title', e.target.value)} required />
         <input className="select" type="date" value={form.date} onChange={(e) => update('date', e.target.value)} />
-        <select className="select" value={form.category} onChange={(e) => update('category', e.target.value)}>
+        <select className="select" value={form.category} onChange={(e) => update('category', e.target.value as Category)}>
           <option value="journal">Journal</option>
           <option value="essay">Essay</option>
           <option value="poem">Poem</option>
@@ -45,4 +58,3 @@ export default function NewPostPage() {
     </div>
   );
 }
-

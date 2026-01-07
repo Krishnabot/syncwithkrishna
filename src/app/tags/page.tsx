@@ -1,8 +1,8 @@
-import { getAllTags } from '@/lib/content';
+import { getAllTagsAsync } from '@/lib/content';
 import Link from 'next/link';
 
-export default function TagsIndexPage() {
-  const tags = getAllTags();
+export default async function TagsIndexPage() {
+  const tags = await getAllTagsAsync();
   return (
     <div>
       <h1 className="page-title">Tags</h1>
@@ -16,4 +16,3 @@ export default function TagsIndexPage() {
     </div>
   );
 }
-
