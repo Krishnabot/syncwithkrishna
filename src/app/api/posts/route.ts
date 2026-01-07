@@ -1,17 +1,16 @@
-import { NextResponse } from 'next/server';
-import { requireAdmin } from '@/lib/auth';
 import { dbGetPosts, dbUpsertPost } from '@/lib/sqlite';
+import { json, adminOnly, readJson, normalizePostInput } from '@/lib/api';
 
 export async function GET() {
   const posts = await dbGetPosts();
-  return NextResponse.json(posts);
+  return json(posts);
 }
 
 export async function POST(req: Request) {
-  const admin = await requireAdmin();
-  if (!admin) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const body = await req.json();
-  await dbUpsertPost(body);
-  return NextResponse.json({ ok: true });
+  return adminOnly(async () => {
+    const body = await readJson(req);
+    const post = normalizePostInput(body);
+    await dbUpsertPost(post);
+    return json({ ok: true });
+  });
 }
-

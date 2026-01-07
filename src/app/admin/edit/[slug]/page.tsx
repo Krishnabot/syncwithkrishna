@@ -1,4 +1,4 @@
-import { dbGetPost } from '@/lib/sqlite';
+import { dbGetPostBySlug } from '@/lib/sqlite';
 import PostEditor from '@/components/admin/PostEditor';
 
 type Params = { slug: string } | Promise<{ slug: string }>;
@@ -6,7 +6,7 @@ function isPromise<T>(obj: unknown): obj is Promise<T> { return !!obj && typeof 
 
 export default async function EditPostPage({ params }: { params: Params }) {
   const p = isPromise(params) ? await params : params;
-  const post = await dbGetPost('journal', p.slug) || await dbGetPost('essay', p.slug) || await dbGetPost('poem', p.slug);
+  const post = await dbGetPostBySlug(p.slug);
   if (!post) return <div className="muted">Not found</div>;
   return <PostEditor post={post} />;
 }

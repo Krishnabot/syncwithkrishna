@@ -105,6 +105,24 @@ export async function dbGetPost(category: string, slug: string): Promise<Post | 
   } as Post;
 }
 
+export async function dbGetPostBySlug(slug: string): Promise<Post | null> {
+  const { db } = await openDb();
+  const stmt = db.prepare('SELECT slug, title, date, category, tags, excerpt, content, draft FROM posts WHERE slug = ? LIMIT 1');
+  const row = stmt.getAsObject([slug]);
+  stmt.free();
+  if (!row || !row.slug) return null;
+  return {
+    slug: String(row.slug),
+    title: String(row.title),
+    date: String(row.date),
+    category: String(row.category) as Post['category'],
+    tags: row.tags ? (JSON.parse(row.tags as string) as string[]) : [],
+    excerpt: (row.excerpt as string) ?? '',
+    content: (row.content as string) ?? '',
+    draft: !!row.draft,
+  } as Post;
+}
+
 export async function dbUpsertPost(post: { slug: string; title: string; date: string; category: string; tags: string[]; excerpt: string; content: string; draft?: boolean }) {
   const { SQL, db } = await openDb();
   const stmt = db.prepare('INSERT INTO posts (slug, title, date, category, tags, excerpt, content, draft) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(slug) DO UPDATE SET title=excluded.title, date=excluded.date, category=excluded.category, tags=excluded.tags, excerpt=excluded.excerpt, content=excluded.content, draft=excluded.draft');
