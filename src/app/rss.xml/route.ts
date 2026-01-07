@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+export const revalidate = 3600;
+export const dynamic = 'force-static';
 import { getSortedPostsData } from '@/lib/content';
 
 function siteUrl() {
@@ -37,4 +39,3 @@ export async function GET() {
   </rss>`;
   return new NextResponse(xml, { headers: { 'Content-Type': 'application/xml' } });
 }
-
