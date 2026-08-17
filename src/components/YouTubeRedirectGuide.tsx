@@ -327,6 +327,7 @@ export default function YouTubeRedirectGuide() {
       hostname: window.location.hostname,
       search: window.location.search,
       userAgent: navigator.userAgent,
+      referrer: document.referrer,
     });
     const modeTimer = window.setTimeout(
       () => setMode(showGuide ? "guide" : "redirecting"),

@@ -240,8 +240,15 @@ Detection is case-insensitive and currently recognizes:
 - TikTok
 - `musical_ly` and separator variants
 - ByteDance
+- TikTok variants such as `TTWebView`, Trill, Aweme, and ZhiliaoApp
+- Generic Android WebView markers used when an app hides its product name
+- Generic iPhone and iPad WebViews that omit standalone-browser identifiers
 - Instagram
 - Facebook, including `FBAV` and `FBAN`
+
+Normal Safari, Chrome, Firefox, Edge, Opera, and DuckDuckGo identifiers on iOS are excluded from the generic iOS WebView fallback so they can proceed to the YouTube redirect.
+
+Known TikTok, Instagram, and Facebook referrer hostnames are also treated as an in-app entry signal when available.
 
 User-agent detection is heuristic and cannot guarantee identification of every current or future in-app browser.
 
