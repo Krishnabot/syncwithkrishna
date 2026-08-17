@@ -96,13 +96,15 @@ function drawHand(
 }
 
 function GuideCanvas({ reducedMotion }: { reducedMotion: boolean }) {
+  const guideRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [phase, setPhase] = useState<UiPhase>(reducedMotion ? "step2" : "step1");
   const [menuPressed, setMenuPressed] = useState(reducedMotion);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const guide = guideRef.current;
+    if (!canvas || !guide) return;
     const context = canvas.getContext("2d");
     if (!context) return;
 
@@ -114,9 +116,12 @@ function GuideCanvas({ reducedMotion }: { reducedMotion: boolean }) {
     let wasMenuPressed = reducedMotion;
 
     const resize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
+      const visualViewport = window.visualViewport;
+      width = Math.round(visualViewport?.width ?? window.innerWidth);
+      height = Math.round(visualViewport?.height ?? window.innerHeight);
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      guide.style.width = `${width}px`;
+      guide.style.height = `${height}px`;
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       canvas.style.width = `${width}px`;
@@ -128,13 +133,13 @@ function GuideCanvas({ reducedMotion }: { reducedMotion: boolean }) {
       context.clearRect(0, 0, width, height);
       const elapsed = reducedMotion ? 6200 : (now - startTime) % LOOP_DURATION;
       const target = {
-        x: width - (width < 640 ? 28 : 44),
-        y: width < 640 ? 32 : 42,
+        x: width - (width < 640 ? 24 : 36),
+        y: 0,
       };
       const start: [number, number] = [width * 0.38, Math.min(height * 0.38, 330)];
       const control1: [number, number] = [width * 0.56, height * 0.32];
       const control2: [number, number] = [target.x - 90, target.y + 120];
-      const end: [number, number] = [target.x - 4, target.y + 8];
+      const end: [number, number] = [target.x, target.y + 2];
       const arrowProgress = reducedMotion ? 1 : ease(elapsed / 1800);
 
       context.save();
@@ -218,10 +223,12 @@ function GuideCanvas({ reducedMotion }: { reducedMotion: boolean }) {
     render(performance.now());
     window.addEventListener("resize", resize, { passive: true });
     window.addEventListener("orientationchange", resize, { passive: true });
+    window.visualViewport?.addEventListener("resize", resize, { passive: true });
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("resize", resize);
       window.removeEventListener("orientationchange", resize);
+      window.visualViewport?.removeEventListener("resize", resize);
       startTime = 0;
     };
   }, [reducedMotion]);
@@ -229,9 +236,12 @@ function GuideCanvas({ reducedMotion }: { reducedMotion: boolean }) {
   const showSheet = reducedMotion || phase === "step2" || phase === "reset";
 
   return (
-    <div className="fixed inset-0 z-[100] overflow-hidden bg-[#fbfbfa] text-slate-950">
+    <div
+      ref={guideRef}
+      className="fixed left-0 top-0 z-[100] h-[100dvh] w-[100dvw] max-w-none overflow-hidden bg-[#fbfbfa] text-slate-950"
+    >
       <div
-        className={`relative z-10 mx-auto flex h-full max-w-3xl flex-col items-center px-6 pt-[max(6rem,env(safe-area-inset-top))] text-center transition-opacity duration-700 ${phase === "reset" ? "opacity-0" : "opacity-100"}`}
+        className={`relative z-10 mx-auto flex h-full w-full min-w-0 max-w-3xl flex-col items-center overflow-hidden px-4 pt-[max(4.5rem,env(safe-area-inset-top))] text-center transition-opacity duration-700 sm:px-6 sm:pt-[max(6rem,env(safe-area-inset-top))] ${phase === "reset" ? "opacity-0" : "opacity-100"}`}
       >
         <div className="rounded-2xl border border-slate-200 bg-white px-6 py-3 text-base font-bold tracking-tight text-slate-700 shadow-sm sm:text-lg">
           {phase === "step1" ? (
@@ -281,7 +291,7 @@ function GuideCanvas({ reducedMotion }: { reducedMotion: boolean }) {
           <MenuRow icon={<Link2 />} label="Copy link" />
         </div>
       </div>
-      <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none fixed inset-0 z-40" />
+      <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none absolute left-0 top-0 z-40" />
 
       <div className="sr-only" aria-live="polite">
         {phase === "step1"
