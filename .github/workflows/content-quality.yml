@@ -29,7 +29,7 @@ jobs:
         run: npm run content:check
 
       - name: Lint Markdown content path
-        run: npx eslint src/lib/content.ts src/app/api/posts/route.ts 'src/app/api/posts/[slug]/route.ts' 'src/app/posts/[category]/[slug]/page.tsx'
+        run: npx eslint src/lib/content.ts scripts/check-markdown-content.mjs 'src/app/posts/[category]/[slug]/page.tsx'
 
       - name: Type-check
         run: npx tsc --noEmit
