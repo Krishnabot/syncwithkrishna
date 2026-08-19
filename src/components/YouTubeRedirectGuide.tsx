@@ -337,7 +337,6 @@ export default function YouTubeRedirectGuide() {
       hostname: window.location.hostname,
       search: window.location.search,
       userAgent: navigator.userAgent,
-      referrer: document.referrer,
     });
     const modeTimer = window.setTimeout(
       () => setMode(showGuide ? "guide" : "redirecting"),
@@ -345,7 +344,7 @@ export default function YouTubeRedirectGuide() {
     );
     const redirectTimer = showGuide
       ? undefined
-      : window.setTimeout(() => window.location.replace(YOUTUBE_URL), 350);
+      : window.setTimeout(() => window.location.replace(YOUTUBE_URL), 650);
     return () => {
       window.clearTimeout(modeTimer);
       if (redirectTimer !== undefined) window.clearTimeout(redirectTimer);
@@ -356,13 +355,41 @@ export default function YouTubeRedirectGuide() {
   if (mode === "guide") return <GuideCanvas reducedMotion={reducedMotion} />;
 
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#fbfbfa] px-6 text-center text-slate-950">
-      <div className="mb-6 size-8 rounded-full border-2 border-slate-200 border-t-slate-800 motion-safe:animate-spin" />
-      <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Opening YouTube…</h1>
-      <p className="mt-3 text-base text-slate-500 sm:text-lg">Taking you to The Nepali Book Worm</p>
+    <main className="fixed inset-0 z-[100] flex min-h-[100svh] w-full items-center justify-center overflow-hidden bg-[#fbfbfa] px-5 py-[max(2rem,env(safe-area-inset-top))] text-center text-slate-950 sm:px-8">
+      <div className="flex w-full max-w-md flex-col items-center">
+        <div className="relative mb-7 flex size-24 items-center justify-center sm:mb-8 sm:size-28">
+          <span className="absolute inset-0 rounded-full bg-red-100 motion-safe:animate-[ping_1.8s_cubic-bezier(0,0,0.2,1)_infinite]" />
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 68 48"
+            className="relative w-20 drop-shadow-[0_8px_18px_rgba(255,0,0,0.2)] motion-safe:animate-[spin_2.4s_linear_infinite] sm:w-24"
+          >
+            <path
+              fill="#FF0033"
+              d="M66.52 7.44A8.02 8.02 0 0 0 60.88 1.8C55.9.46 36 .46 36 .46S16.1.46 11.12 1.8a8.02 8.02 0 0 0-5.64 5.64C4.14 12.42 4.14 24 4.14 24s0 11.58 1.34 16.56a8.02 8.02 0 0 0 5.64 5.64C16.1 47.54 36 47.54 36 47.54s19.9 0 24.88-1.34a8.02 8.02 0 0 0 5.64-5.64C67.86 35.58 67.86 24 67.86 24s0-11.58-1.34-16.56Z"
+            />
+            <path fill="#fff" d="m29.64 33.82 16.52-9.82-16.52-9.82v19.64Z" />
+          </svg>
+        </div>
+        <h1 className="text-balance text-3xl font-semibold tracking-[-0.035em] sm:text-4xl">
+          Redirecting to YouTube
+        </h1>
+        <p className="mt-3 text-base font-medium text-slate-500 sm:text-lg">
+          The Nepali BookWorm
+        </p>
+        <span className="mt-7 flex items-center gap-1.5" aria-hidden="true">
+          {[0, 150, 300].map((delay) => (
+            <span
+              key={delay}
+              className="size-1.5 animate-pulse rounded-full bg-slate-400"
+              style={{ animationDelay: `${delay}ms` }}
+            />
+          ))}
+        </span>
+      </div>
       <noscript>
-        <a className="mt-6 underline" href={YOUTUBE_URL}>Continue to YouTube</a>
+        <a className="absolute bottom-8 underline" href={YOUTUBE_URL}>Continue to YouTube</a>
       </noscript>
-    </div>
+    </main>
   );
 }

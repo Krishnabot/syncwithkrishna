@@ -7,9 +7,6 @@ const IOS_WEBKIT_PATTERN = /applewebkit/i;
 const IOS_MOBILE_PATTERN = /mobile\//i;
 const IOS_STANDALONE_BROWSER_PATTERN =
   /safari\/|crios\/|fxios\/|edgios\/|opios\/|duckduckgo\//i;
-const IN_APP_REFERRER_PATTERN =
-  /(^|\.)tiktok\.com$|(^|\.)tiktokv\.com$|(^|\.)musical\.ly$|(^|\.)instagram\.com$|(^|\.)facebook\.com$/i;
-
 export function isKnownInAppBrowser(userAgent: string): boolean {
   const isIosWebView =
     IOS_DEVICE_PATTERN.test(userAgent) &&
@@ -24,31 +21,21 @@ export function isKnownInAppBrowser(userAgent: string): boolean {
   );
 }
 
-function hasKnownInAppReferrer(referrer: string): boolean {
-  if (!referrer) return false;
-
-  try {
-    return IN_APP_REFERRER_PATTERN.test(new URL(referrer).hostname);
-  } catch {
-    return false;
-  }
-}
-
 export function shouldShowYouTubeGuide({
   hostname,
   search,
   userAgent,
-  referrer = "",
 }: {
   hostname: string;
   search: string;
   userAgent: string;
-  referrer?: string;
 }): boolean {
   const params = new URLSearchParams(search);
 
   if (params.get("preview") === "1") return true;
   if (["localhost", "127.0.0.1", "::1"].includes(hostname)) return true;
 
-  return isKnownInAppBrowser(userAgent) || hasKnownInAppReferrer(referrer);
+  // Do not use the referrer here. External browsers can preserve TikTok's
+  // referrer during handoff, which would incorrectly show the guide again.
+  return isKnownInAppBrowser(userAgent);
 }
