@@ -1,15 +1,12 @@
 import { getPostsByTagAsync, paginate, sortPosts } from '@/lib/content';
 import ArchiveView from '@/components/ArchiveView';
 type TagPageParams = { tag: string; page: string };
-function isPromise<T>(obj: unknown): obj is Promise<T> {
-  return !!obj && typeof (obj as { then?: unknown }).then === 'function';
-}
 
-export default async function TagPage({ params, searchParams }: { params: TagPageParams | Promise<TagPageParams>, searchParams?: { sort?: string } }) {
-  const p = isPromise<TagPageParams>(params) ? await params : params;
+export default async function TagPage({ params, searchParams }: { params: Promise<TagPageParams>, searchParams: Promise<{ sort?: string }> }) {
+  const [p, query] = await Promise.all([params, searchParams]);
   const tag = decodeURIComponent(p.tag);
   const page = Number(p.page) || 1;
-  const order = (searchParams?.sort === 'asc' ? 'asc' : 'desc') as 'asc' | 'desc';
+  const order = query.sort === 'asc' ? 'asc' : 'desc';
   const posts = sortPosts(await getPostsByTagAsync(tag), order);
   const { slice, totalPages } = paginate(posts, page, 9);
   

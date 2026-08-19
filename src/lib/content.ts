@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { dbHasPosts, dbGetPosts, dbGetPost, dbGetPostsByCategory as dbCat, dbGetAllTags as dbTags, dbGetPostsByTag as dbTag, dbGetAllSlugs } from './sqlite';
 
 export interface Post {
   slug: string;
@@ -128,35 +127,11 @@ export function sortPosts(posts: Post[], order: 'asc' | 'desc' = 'desc'): Post[]
 }
 
 export function getAllPostSlugs(): { category: string; slug: string }[] {
-  const categories = ['journals', 'essays', 'poems'];
-  const slugs: { category: string; slug: string }[] = [];
-
-  categories.forEach(category => {
-    const categoryPath = path.join(postsDirectory, category);
-    
-    if (fs.existsSync(categoryPath)) {
-      const fileNames = fs.readdirSync(categoryPath);
-      
-      fileNames.forEach(fileName => {
-        if (fileName.endsWith('.md')) {
-          const slug = fileName.replace(/\.md$/, '');
-          slugs.push({
-            category: category.slice(0, -1), // Remove 's' from category
-            slug,
-          });
-        }
-      });
-    }
-  });
-
-  return slugs;
+  return getSortedPostsData().map(({ category, slug }) => ({ category, slug }));
 }
 
 export async function getAllPostSlugsAsync(): Promise<{ category: string; slug: string }[]> {
-  if (await dbHasPosts()) {
-    return await dbGetAllSlugs();
-  }
-  return [];
+  return getAllPostSlugs();
 }
 
 export async function getPostData(category: string, slug: string): Promise<Post> {
@@ -200,41 +175,17 @@ export function getDraftPosts(): Post[] {
 }
 
 export async function getSortedPostsDataAsync(): Promise<Post[]> {
-  if (await dbHasPosts()) {
-    const rows = await dbGetPosts();
-    const posts = rows.map((p) => ({ ...p, category: p.category as Post['category'] }));
-    return posts.filter((p: Post) => !p.draft).sort((a: Post, b: Post) => (a.date < b.date ? 1 : -1));
-  }
-  return [];
+  return getSortedPostsData();
 }
 
 export async function getPostsByCategoryAsync(category: 'journal' | 'essay' | 'poem'): Promise<Post[]> {
-  if (await dbHasPosts()) {
-    const rows = await dbCat(category);
-    const posts = rows.map((p) => ({ ...p, category: p.category as Post['category'] }));
-    return posts.filter((p: Post) => !p.draft);
-  }
-  return [];
+  return getPostsByCategory(category);
 }
 
 export async function getAllTagsAsync(): Promise<{ tag: string; count: number }[]> {
-  if (await dbHasPosts()) {
-    return await dbTags();
-  }
-  return [];
+  return getAllTags();
 }
 
 export async function getPostsByTagAsync(tag: string): Promise<Post[]> {
-  if (await dbHasPosts()) {
-    const rows = await dbTag(tag);
-    const posts = rows.map((p) => ({ ...p, category: p.category as Post['category'] }));
-    return posts.filter((p: Post) => !p.draft);
-  }
-  return [];
-}
-
-export async function getPostDataPreferDB(category: string, slug: string): Promise<Post> {
-  const dbPost = await dbGetPost(category, slug);
-  if (dbPost) return dbPost as Post;
-  return await getPostData(category, slug);
+  return getPostsByTag(tag);
 }

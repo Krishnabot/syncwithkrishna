@@ -3,10 +3,11 @@ import PostCard from '@/components/PostCard';
 import Pagination from '@/components/Pagination';
 import { notFound } from 'next/navigation';
 
-export default function DraftsPage({ searchParams }: { searchParams?: { sort?: string; page?: string } }) {
+export default async function DraftsPage({ searchParams }: { searchParams: Promise<{ sort?: string; page?: string }> }) {
   if (process.env.NODE_ENV !== 'development') notFound();
-  const order = (searchParams?.sort === 'asc' ? 'asc' : 'desc') as 'asc' | 'desc';
-  const page = Number(searchParams?.page || '1') || 1;
+  const query = await searchParams;
+  const order = query.sort === 'asc' ? 'asc' : 'desc';
+  const page = Number(query.page || '1') || 1;
   const posts = sortPosts(getDraftPosts(), order);
   const { slice, totalPages } = paginate(posts, page, 12);
   return (
