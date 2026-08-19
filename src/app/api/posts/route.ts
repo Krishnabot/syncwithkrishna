@@ -1,9 +1,9 @@
-import { dbGetPosts, dbUpsertPost } from '@/lib/sqlite';
+import { dbUpsertPost } from '@/lib/sqlite';
+import { getSortedPostsData } from '@/lib/content';
 import { json, adminOnly, readJson, normalizePostInput } from '@/lib/api';
 
 export async function GET() {
-  const posts = await dbGetPosts();
-  return json(posts);
+  return json(getSortedPostsData());
 }
 
 export async function POST(req: Request) {

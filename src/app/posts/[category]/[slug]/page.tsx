@@ -1,5 +1,4 @@
-import { getPostDataPreferDB, getAllPostSlugsAsync } from '@/lib/content';
-import { format } from 'date-fns';
+import { getPostData, getAllPostSlugsAsync } from '@/lib/content';
 import Link from 'next/link';
 import ContentRenderer from '@/components/ContentRenderer';
 import PostHeader from '@/components/PostHeader';
@@ -8,7 +7,7 @@ import type { Metadata } from 'next';
 export async function generateStaticParams() {
   return await getAllPostSlugsAsync();
 }
-export const dynamic = 'force-dynamic';
+export const dynamicParams = false;
 
 type Params = { category: string; slug: string } | Promise<{ category: string; slug: string }>;
 function isPromise<T>(obj: unknown): obj is Promise<T> { return !!obj && typeof (obj as { then?: unknown }).then === 'function'; }
@@ -16,7 +15,7 @@ function isPromise<T>(obj: unknown): obj is Promise<T> { return !!obj && typeof 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const p = isPromise(params) ? await params : params;
   const { category, slug } = p;
-  const post = await getPostDataPreferDB(category, slug);
+  const post = await getPostData(category, slug);
   const url = process.env.SITE_URL || 'http://localhost:3000';
   const canonical = `${url}/posts/${post.category}/${post.slug}`;
   const title = post.title;
@@ -48,7 +47,7 @@ export default async function PostPage({
   params: Promise<{ category: string; slug: string }>;
 }) {
   const { category, slug } = await params;
-  const post = await getPostDataPreferDB(category, slug);
+  const post = await getPostData(category, slug);
 
   return (
     <>

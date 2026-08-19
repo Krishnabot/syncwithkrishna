@@ -167,7 +167,7 @@ The `@/*` TypeScript alias imports files from `src/*`.
 
 Mutation endpoints use the administration session checks implemented in the API helpers and route handlers.
 
-## Content and database
+## Markdown publishing
 
 Markdown source files live in:
 
@@ -193,9 +193,31 @@ Post content goes here.
 
 Supported categories are `journal`, `essay`, and `poem`; filesystem directories use the plural names.
 
-Administration features store posts and sessions in `data/blog.sqlite` through `sql.js`. Server-rendered listing helpers prefer database content when the database contains posts. Individual post rendering can fall back to Markdown when a matching database post does not exist.
+Markdown under `content/posts` is the single source of truth for all public pages, categories, tags, static post parameters, and public `GET /api/posts` responses. Published content is scanned from the repository at build time. Files with `draft: true` are excluded from public lists and generated post parameters.
 
-The database is written to the local filesystem. Confirm that the deployment provides persistent writable storage before relying on administration changes in production. Ephemeral or read-only serverless filesystems may lose changes or reject writes. Durable multi-instance hosting would normally require a managed database.
+Validate every Markdown file before committing:
+
+```bash
+npm run content:check
+```
+
+The validator checks the three category directories, required frontmatter, folder/category agreement, dates, string tag arrays, non-empty bodies, and duplicate slugs.
+
+### Publishing workflow
+
+1. Create or edit an individual `.md` file in the appropriate `content/posts` directory.
+2. Run `npm run content:check` and preview the website locally.
+3. Commit the Markdown file to Git.
+4. Push the branch to GitHub.
+5. A Git-connected Vercel project creates a preview deployment for a feature branch; a push or merge to `main` creates the production deployment.
+
+The repository includes `.github/workflows/content-quality.yml`. On pushes to `main` and `feature/**`, and on pull requests to `main`, it installs locked dependencies, validates Markdown, lints the Markdown content path, type-checks, and builds the site. Vercel deployment itself is provided by the Vercel Git integration and must be enabled for the GitHub repository in the Vercel project settings.
+
+### Transitional backend
+
+Administration features still store posts and sessions in `data/blog.sqlite` through `sql.js`, but database posts are no longer used by public pages or public GET APIs. Changes made through the legacy admin editor therefore do not publish website content in this Markdown-only stage. The backend remains temporarily so it can be removed separately after the Markdown workflow is confirmed in production.
+
+The legacy database is written to the local filesystem. Until that backend is removed, ephemeral or read-only serverless filesystems may lose admin/session changes or reject writes. This does not affect public Markdown content, which is bundled from Git during deployment.
 
 ## Authentication
 
@@ -319,11 +341,13 @@ DNS and hosting-provider domain settings are not stored in this repository, so c
 
 1. Set `SITE_URL`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD`.
 2. Run `npm ci`.
-3. Run `npm run lint`.
-4. Run `npx tsc --noEmit`.
-5. Run `npm run build`.
-6. Confirm persistent storage if production administration will write to SQLite.
-7. Connect the domain and verify HTTPS.
+3. Run `npm run content:check`.
+4. Run `npm run lint`.
+5. Run `npx tsc --noEmit`.
+6. Run `npm run build`.
+7. Confirm persistent storage if the transitional administration system will write to SQLite.
+8. Connect the GitHub repository to Vercel for automatic push deployments.
+9. Connect the domain and verify HTTPS.
 
 For a standard Node deployment:
 
@@ -354,3 +378,4 @@ npm run start
 - User-agent detection is heuristic.
 - SQL.js needs durable writable storage for reliable production administration.
 - Geist downloads can fail in restricted-network build environments.
+- The legacy administration editor writes SQLite, not the public Markdown source, during the staged migration.

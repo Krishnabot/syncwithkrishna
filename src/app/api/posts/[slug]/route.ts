@@ -1,12 +1,13 @@
-import { dbGetPostBySlug, dbUpsertPost, dbDeletePost } from '@/lib/sqlite';
+import { dbUpsertPost, dbDeletePost } from '@/lib/sqlite';
 import { json, adminOnly, readJson, normalizePostInput } from '@/lib/api';
+import { getSortedPostsData } from '@/lib/content';
 
 type Params = { slug: string } | Promise<{ slug: string }>;
 function isPromise<T>(obj: unknown): obj is Promise<T> { return !!obj && typeof (obj as { then?: unknown }).then === 'function'; }
 
 export async function GET(_: Request, { params }: { params: Params }) {
   const p = isPromise(params) ? await params : params;
-  const post = await dbGetPostBySlug(p.slug);
+  const post = getSortedPostsData().find((candidate) => candidate.slug === p.slug);
   if (!post) return json({ error: 'Not found' }, 404);
   return json(post);
 }
