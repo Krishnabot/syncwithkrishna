@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import YouTubeRedirectGuide from "@/components/YouTubeRedirectGuide";
 
 export const metadata: Metadata = {
-  title: "Open in Browser",
-  description: "Instructions for opening The Nepali Book Worm in your browser.",
+  title: "Redirecting to YouTube | The Nepali BookWorm",
+  description: "Redirecting to The Nepali BookWorm on YouTube.",
   robots: { index: false, follow: false },
 };
 

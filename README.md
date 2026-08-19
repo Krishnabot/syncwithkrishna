@@ -227,7 +227,7 @@ Detection is case-insensitive and currently recognizes:
 
 Normal Safari, Chrome, Firefox, Edge, Opera, and DuckDuckGo identifiers on iOS are excluded from the generic iOS WebView fallback so they can proceed to the YouTube redirect.
 
-Known TikTok, Instagram, and Facebook referrer hostnames are also treated as an in-app entry signal when available.
+The guide is selected from the active browser's user agent. Referrer headers are deliberately ignored because TikTok may preserve its referrer when handing the URL to Chrome or Safari; the external browser must show the YouTube redirect animation instead of the in-app guide.
 
 User-agent detection is heuristic and cannot guarantee identification of every current or future in-app browser.
 
