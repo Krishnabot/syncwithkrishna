@@ -54,7 +54,7 @@ export default function Terminal({ knowledge }: { knowledge: KnowledgeBase }) {
       id: nextId.current++, query: cleaned, intent: result.intent, confidence: result.confidence,
       record: hasRecord ? knowledge[knowledgeIntent] : undefined,
       suggestions: hasRecord ? CONTEXTUAL[knowledgeIntent] : DEFAULT_SUGGESTIONS,
-      message: result.intent === "unknown" ? "I don't know how to answer that yet. Try asking about Krishna's skills, projects, experience, services, interests, or contact information." : undefined,
+      message: result.intent === "unknown" ? "THERE IS AS YET INSUFFICIENT DATA FOR A MEANINGFUL ANSWER" : undefined,
     };
     setEntries((current) => [...current, entry]);
     setAnnouncement(result.intent === "unknown" ? "Question not understood. Suggestions are available." : "Response loaded: " + result.intent);

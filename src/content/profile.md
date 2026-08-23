@@ -12,8 +12,6 @@ facts:
     value: Full-Stack Web Developer
   - label: Experience
     value: 5+ years
-  - label: Date of birth
-    value: 17 August 1987
   - label: Phone
     value: +81 70 3620 8914
   - label: Email
