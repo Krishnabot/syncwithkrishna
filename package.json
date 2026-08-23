@@ -1,18 +1,17 @@
 {
-  "name": "personal-blog",
+  "name": "sync-with-krishna-terminal",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "content:check": "node scripts/check-markdown-content.mjs"
+    "typecheck": "tsc --noEmit",
+    "intent:check": "node --experimental-strip-types scripts/check-intents.mjs"
   },
   "dependencies": {
-    "@tailwindcss/forms": "^0.5.7",
-    "@tailwindcss/typography": "^0.5.19",
-    "date-fns": "^4.1.0",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.562.0",
     "next": "16.1.1",
