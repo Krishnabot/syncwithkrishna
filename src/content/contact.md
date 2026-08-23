@@ -17,6 +17,8 @@ facts:
   - label: Work preference
     value: Remote, hybrid, or on-site
 links:
+  - label: Download CV
+    url: https://drive.google.com/uc?export=download&id=1uBUjsOB9_hIz6Rj__hqEy_bVLYjrfPuo
   - label: Email Krishna
     url: mailto:libraryismyparadise@gmail.com
   - label: Call Krishna

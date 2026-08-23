@@ -12,7 +12,7 @@ const cases = [
   ["What is your phone number?", "contact"],
   ["interests", "interests"], ["What do you love?", "interests"], ["What are your hobbies?", "interests"],
   ["Do you like cinema?", "interests"], ["Can we talk about psychology?", "interests"],
-  ["help", "help"], ["clear", "clear"], ["Explain quantum chromodynamics", "unknown"],
+  ["help", "help"], ["download", "download"], ["clear", "clear"], ["Explain quantum chromodynamics", "unknown"],
 ];
 
 for (const [query, expected] of cases) assert.equal(resolveIntent(query).intent, expected, query);

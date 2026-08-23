@@ -2,7 +2,7 @@ import type { Intent, IntentResolution, KnowledgeIntent } from "./terminal-types
 
 type IntentRule = { intent: KnowledgeIntent; phrases: readonly string[]; keywords: readonly string[] };
 const COMMANDS: Readonly<Record<string, Intent>> = {
-  help: "help", whoami: "profile", about: "profile", skills: "skills", projects: "projects",
+  help: "help", download: "download", whoami: "profile", about: "profile", skills: "skills", projects: "projects",
   experience: "experience", services: "services", contact: "contact", interests: "interests",
   clear: "clear", home: "home",
 };

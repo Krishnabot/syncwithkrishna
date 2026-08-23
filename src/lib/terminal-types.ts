@@ -9,7 +9,7 @@ export const KNOWLEDGE_INTENTS = [
 ] as const;
 
 export type KnowledgeIntent = (typeof KNOWLEDGE_INTENTS)[number];
-export type Intent = KnowledgeIntent | "help" | "clear" | "home" | "unknown";
+export type Intent = KnowledgeIntent | "help" | "download" | "clear" | "home" | "unknown";
 export type KnowledgeLink = { label: string; url: string };
 export type KnowledgeGroup = { title: string; items: string[] };
 export type KnowledgeProject = { name: string; description: string; technologies: string[]; status?: string; links?: KnowledgeLink[] };

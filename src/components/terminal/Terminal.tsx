@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { resolveIntent } from "@/lib/intent-engine";
+import { CV_DOWNLOAD_URL } from "@/lib/cv";
 import type { KnowledgeBase, KnowledgeIntent, TerminalEntry } from "@/lib/terminal-types";
 import BootSequence from "./BootSequence";
 import SuggestionChips from "./SuggestionChips";
@@ -47,6 +48,13 @@ export default function Terminal({ knowledge }: { knowledge: KnowledgeBase }) {
       setEntries([]);
       setAnnouncement(result.intent === "clear" ? "Terminal history cleared." : "Returned to terminal home.");
       return;
+    }
+    if (result.intent === "download") {
+      const link = document.createElement("a");
+      link.href = CV_DOWNLOAD_URL;
+      link.target = "_blank";
+      link.rel = "noreferrer";
+      link.click();
     }
     const knowledgeIntent = result.intent as KnowledgeIntent;
     const hasRecord = Object.prototype.hasOwnProperty.call(knowledge, knowledgeIntent);
