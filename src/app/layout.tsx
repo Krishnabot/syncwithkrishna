@@ -1,56 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { cookies } from "next/headers";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.SITE_URL || 'http://localhost:3000'),
-  title: {
-    default: 'Personal Blog',
-    template: '%s · Personal Blog',
-  },
-  description: 'Journals, essays, poems — a personal writing space',
-  openGraph: {
-    type: 'website',
-    title: 'Personal Blog',
-    description: 'Journals, essays, poems — a personal writing space',
-    url: '/',
-    siteName: 'Personal Blog',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Personal Blog',
-    description: 'Journals, essays, poems — a personal writing space',
-  },
-  alternates: { canonical: '/' },
+  metadataBase: new URL(process.env.SITE_URL || "https://syncwithkrishna.com"),
+  title: "Sync with Krishna — Web & Game Development Studio",
+  description: "Independent digital studio creating memorable websites, applications, games, and interactive experiences.",
+  openGraph: { title: "Sync with Krishna", description: "Web, product, and game development for ambitious ideas.", url: "/", siteName: "Sync with Krishna", type: "website" },
+  twitter: { card: "summary_large_image", title: "Sync with Krishna", description: "Web, product, and game development for ambitious ideas." },
 };
 
-export default async function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  const cookieStore = await cookies();
-  const theme = cookieStore.get("theme")?.value;
-  return (
-    <html lang="en" className={theme === "dark" ? "dark" : undefined} suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Header />
-        <main className="max-w-5xl mx-auto px-4 py-8">{children}</main>
-        <Footer />
-      </body>
-    </html>
-  );
-}
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="en"><body>{children}</body></html>; }

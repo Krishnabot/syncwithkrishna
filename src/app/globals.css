@@ -1,324 +1,86 @@
 @import "tailwindcss";
-@plugin "@tailwindcss/typography";
-@plugin "@tailwindcss/forms";
 
-/* Purple/Violet Theme Variables */
-:root {
-  --background: #FAF5FF;        /* Soft Purple background */
-  --foreground: #4C1D95;        /* Darkest Purple text */
-  --card: #FFFFFF;              /* White cards */
-  --card-foreground: #4C1D95;   /* Darkest Purple text on cards */
-  --popover: #FFFFFF;           /* White popovers */
-  --popover-foreground: #4C1D95; /* Darkest Purple text on popovers */
-  --primary: #6B46C1;           /* Deep Purple primary */
-  --primary-foreground: #FFFFFF; /* White text on primary */
-  --secondary: #8B5CF6;         /* Vibrant Violet */
-  --secondary-foreground: #FFFFFF; /* White text on secondary */
-  --muted: #8B5CF6;             /* Vibrant Violet muted */
-  --muted-foreground: #6B46C1;   /* Deep Purple muted text */
-  --accent: #A855F7;            /* Electric Purple accent */
-  --accent-foreground: #FFFFFF; /* White text on accent */
-  --destructive: #7C2D12;       /* Dark red for destructive actions */
-  --destructive-foreground: #FFFFFF; /* White text on destructive */
-  --border: #E9D5FF;             /* Lavender borders */
-  --input: #E9D5FF;              /* Lavender inputs */
-  --ring: #8B5CF6;               /* Vibrant Violet focus rings */
-  --radius: 0.5rem;                /* Default border radius */
+:root { --bg:#19191b; --panel:#1e1e20; --text:#fff; --muted:rgba(255,255,255,.68); --accent:#5454d4; --font-display:"Montserrat","Avenir Next","Segoe UI",sans-serif; --font-body:"Nunito Sans","Avenir Next","Segoe UI",sans-serif; }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; background:var(--bg); color:var(--text); font-family:var(--font-body),sans-serif; overflow-x:hidden; }
+main { position:relative; overflow:hidden; }
+a { color:inherit; text-decoration:none; }
+.shell { width:min(1200px,calc(100% - 48px)); margin-inline:auto; position:relative; z-index:2; }
+.site-header { height:112px; display:flex; align-items:center; justify-content:space-between; }
+.brand { display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-size:21px; font-weight:700; }
+.brand img { object-fit:contain; }
+nav { display:flex; gap:40px; color:var(--muted); font-size:16px; }
+nav a:first-child, nav a:hover { color:#7373ff; }
+.outline-button { border:1px solid rgba(255,255,255,.75); border-radius:5px; padding:12px 34px; transition:.25s; }
+.outline-button:hover { background:#fff; color:#19191b; }
+.ambient { position:absolute; pointer-events:none; filter:blur(130px); border-radius:50%; opacity:.34; }
+.ambient-one { width:520px; height:660px; top:40px; left:-220px; background:#5454d4; transform:rotate(-30deg); }
+.ambient-two { width:460px; height:620px; top:210px; right:-250px; background:#e05688; opacity:.14; transform:rotate(35deg); }
+.hero { min-height:700px; display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:55px; padding-block:70px 120px; }
+.eyebrow { color:#8d8dff !important; text-transform:uppercase; font-weight:700; font-size:13px !important; letter-spacing:.18em !important; margin:0 0 18px !important; }
+h1,h2,h3 { font-family:var(--font-display),sans-serif; margin:0; }
+h1,h2 { font-weight:800; }
+h3 { font-weight:700; }
+h1 { max-width:650px; font-size:clamp(52px,6vw,80px); line-height:1.04; letter-spacing:-.045em; }
+h2 { font-size:clamp(40px,5vw,60px); line-height:1.12; letter-spacing:-.04em; }
+.lede { max-width:590px; color:var(--muted); font-size:21px; line-height:1.85; letter-spacing:-.02em; margin:32px 0; }
+.primary-button { width:max-content; display:inline-flex; align-items:center; justify-content:center; gap:10px; min-height:58px; padding:0 24px; border-radius:5px; background:var(--accent); font-size:18px; font-weight:700; transition:.25s; }
+.primary-button:hover { background:#6666ef; transform:translateY(-3px); }
+.hero-art { position:relative; min-height:570px; }
+.hero-art img { z-index:3; object-fit:contain; object-position:center bottom; }
+.hero-frame { position:absolute; width:380px; height:380px; left:50%; top:48%; border-radius:22px; transform:translate(-50%,-50%) rotate(24deg); }
+.frame-back { border:2px solid #fff; margin:38px 0 0 -20px; }
+.frame-front { border:4px solid #fff; background:var(--accent); }
+.shape { position:absolute; z-index:4; }
+.plus { right:0; bottom:80px; font:300 50px/1 sans-serif; }
+.rings { width:44px; height:44px; right:24px; top:50px; border:2px solid white; border-radius:50%; box-shadow:15px 18px 0 -2px var(--bg),15px 18px 0 0 white; }
+.intro { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; padding-block:100px 70px; }
+.intro p { color:var(--muted); font-size:21px; line-height:1.85; margin:0; }
+.studio-visual { height:670px; overflow:hidden; }
+.studio-visual img { object-fit:cover; }
+.play { position:absolute; z-index:3; left:50%; top:50%; transform:translate(-50%,-50%); width:124px; height:124px; border-radius:50%; background:var(--accent); display:grid; place-items:center; font-size:30px; padding-left:7px; }
+.services { padding-block:170px; text-align:center; }
+.services>h2 { max-width:760px; margin:auto; }
+.service-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:70px 55px; margin-top:90px; }
+.service { padding:0 22px; }
+.service-icon { width:69px; height:69px; border-radius:50%; display:grid; place-items:center; margin:0 auto 25px; color:#7373ff; background:rgba(84,84,212,.13); }
+.service:nth-child(2) .service-icon,.service:nth-child(5) .service-icon { color:#f9b15b; background:rgba(251,168,28,.12); }
+.service:nth-child(3) .service-icon,.service:nth-child(6) .service-icon { color:#f0719f; background:rgba(224,86,136,.12); }
+.service h3 { font-size:25px; margin-bottom:14px; }
+.service p { color:var(--muted); font-size:18px; line-height:1.55; margin:0; }
+.work { padding-block:80px 180px; }
+.project-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:70px; }
+.project { background:var(--panel); border-radius:14px; padding:18px 18px 24px; align-self:start; }
+.project-2 { margin-top:55px; }.project-3 { margin-top:110px; }
+.project-image { position:relative; aspect-ratio:1.33; overflow:hidden; border-radius:12px; }
+.project-image img { object-fit:cover; }
+.project>p { color:#8d8dff; margin:20px 0 5px; font-size:14px; }
+.project h3 { font-size:21px; }
+.contact { background:rgba(30,30,32,.72); }
+.contact-inner { min-height:500px; display:flex; align-items:center; justify-content:space-between; gap:70px; }
+.contact-inner>div { max-width:760px; }
+.contact-inner>div>p:last-child { max-width:650px; color:var(--muted); font-size:19px; line-height:1.7; }
+footer { min-height:190px; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:35px; color:var(--muted); }
+footer>div { display:flex; gap:28px; } footer>p { text-align:right; } footer .brand { color:white; }
+@media (max-width:900px) {
+  .site-header nav { display:none; }
+  .hero { grid-template-columns:1fr; padding-top:50px; text-align:center; }
+  .hero-copy>* { margin-inline:auto; }.hero-art { min-height:520px; }
+  .intro { grid-template-columns:1fr; gap:30px; }.studio-visual { height:480px; }
+  .service-grid { grid-template-columns:repeat(2,1fr); }
+  .contact-inner { flex-direction:column; justify-content:center; align-items:flex-start; }
+  footer { grid-template-columns:1fr; padding-block:55px; text-align:center; } footer>* { justify-self:center; } footer>p { text-align:center; }
 }
-
-.dark {
-  --background: #1E1B4B;         /* Dark Purple background */
-  --foreground: #E9D5FF;         /* Lavender text */
-  --card: #312E81;               /* Darker Purple cards */
-  --card-foreground: #E9D5FF;    /* Lavender text on cards */
-  --popover: #312E81;            /* Darker Purple popovers */
-  --popover-foreground: #E9D5FF; /* Lavender text on popovers */
-  --primary: #8B5CF6;            /* Vibrant Violet primary */
-  --primary-foreground: #FFFFFF; /* White text on primary */
-  --secondary: #A855F7;          /* Electric Purple secondary */
-  --secondary-foreground: #FFFFFF; /* White text on secondary */
-  --muted: #4C1D95;              /* Darkest Purple muted */
-  --muted-foreground: #C4B5FD;  /* Light Violet muted text */
-  --accent: #A855F7;             /* Electric Purple accent */
-  --accent-foreground: #FFFFFF; /* White text on accent */
-  --destructive: #DC2626;         /* Red for destructive actions */
-  --destructive-foreground: #FFFFFF; /* White text on destructive */
-  --border: #4C1D95;             /* Darkest Purple borders */
-  --input: #4C1D95;              /* Darkest Purple inputs */
-  --ring: #A855F7;               /* Electric Purple focus rings */
+@media (max-width:640px) {
+  .shell { width:min(100% - 30px,1200px); }
+  .site-header { height:86px; }.site-header .brand span { font-size:17px; }.outline-button { padding:10px 16px; }
+  .hero { min-height:auto; padding-block:60px 80px; gap:10px; }.hero-art { min-height:420px; }
+  .hero-frame { width:270px; height:270px; }.lede { font-size:18px; line-height:1.65; }
+  .intro { padding-block:70px 45px; }.studio-visual { height:330px; }.play { width:82px; height:82px; }
+  .services { padding-block:110px; }.service-grid { grid-template-columns:1fr; gap:55px; margin-top:65px; }
+  .work { padding-block:40px 110px; }.project-grid { grid-template-columns:1fr; }.project-2,.project-3 { margin-top:0; }
+  .contact-inner { min-height:560px; }.contact .primary-button { font-size:15px; }
+  footer>div { flex-wrap:wrap; justify-content:center; }
 }
-
-/* Base styles */
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-}
-
-/* Purple/Violet themed utility classes */
-.container {
-  @apply max-w-5xl mx-auto px-4;
-}
-
-.header {
-  @apply border-b border-purple-200 bg-white/90 dark:bg-purple-900/60 backdrop-blur;
-}
-
-.site-title {
-  @apply text-xl font-bold;
-  color: var(--foreground);
-}
-
-.nav-link {
-  color: var(--foreground);
-  @apply hover:text-purple-600 dark:hover:text-purple-300 transition-colors;
-}
-
-.footer {
-  @apply border-t border-purple-200 dark:border-purple-800;
-}
-
-/* Purple/Violet themed cards */
-.card {
-  @apply block p-6 rounded-lg border border-purple-200 dark:border-purple-800 bg-white dark:bg-purple-800 hover:border-purple-300 dark:hover:border-purple-700 transition-all duration-200;
-}
-
-.card:hover {
-  box-shadow: 0 1px 2px 0 rgba(107, 70, 193, 0.05);
-}
-
-.card-title {
-  @apply text-xl font-semibold text-purple-900 dark:text-purple-100 mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors;
-}
-
-.card-subtitle {
-  @apply text-purple-700 dark:text-purple-300 leading-relaxed;
-}
-
-/* Purple/Violet themed buttons */
-.btn {
-  @apply inline-flex items-center font-medium rounded-lg transition-all duration-200;
-}
-
-.btn-primary {
-  @apply px-6 py-3 bg-gradient-to-r from-purple-600 to-violet-600 text-white hover:from-purple-700 hover:to-violet-700 transform hover:-translate-y-0.5;
-  box-shadow: 0 4px 6px -1px rgba(107, 70, 193, 0.1), 0 2px 4px -1px rgba(107, 70, 193, 0.06);
-}
-
-.btn-primary:hover {
-  box-shadow: 0 10px 15px -3px rgba(107, 70, 193, 0.1), 0 4px 6px -2px rgba(107, 70, 193, 0.05);
-}
-
-.btn-secondary {
-  @apply px-4 py-2 border border-purple-300 text-purple-700 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/50;
-}
-
-.btn-icon {
-  @apply inline-flex items-center justify-center w-9 h-9 rounded-md border border-purple-200 dark:border-purple-700 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/50;
-}
-
-/* Purple/Violet themed tags */
-.tag {
-  @apply text-xs px-3 py-1 rounded-full;
-  background-color: color-mix(in oklab, var(--secondary) 15%, var(--background));
-  color: var(--secondary);
-  @apply hover:bg-purple-200 dark:hover:bg-purple-700 transition-colors;
-}
-
-/* Purple/Violet themed typography */
-.page-title {
-  @apply text-3xl md:text-4xl font-bold text-purple-900 dark:text-purple-100 mb-6;
-}
-
-.section-title {
-  @apply text-2xl font-bold text-purple-900 dark:text-purple-100 mb-8;
-}
-
-.page-subtitle {
-  @apply text-xl text-purple-700 dark:text-purple-300 leading-relaxed;
-}
-
-.muted {
-  color: var(--muted);
-}
-
-.meta-time {
-  @apply text-sm;
-  color: var(--muted);
-}
-
-.meta-sep {
-  @apply text-sm;
-  color: color-mix(in oklab, var(--foreground) 40%, var(--background));
-}
-
-/* Purple/Violet themed content */
-.prose-content {
-  @apply prose prose-lg max-w-none dark:prose-invert;
-  color: var(--foreground);
-}
-
-.prose-content h1,
-.prose-content h2,
-.prose-content h3,
-.prose-content h4,
-.prose-content h5,
-.prose-content h6 {
-  @apply text-purple-900 dark:text-purple-100;
-}
-
-.prose-content p,
-.prose-content li,
-.prose-content blockquote,
-.prose-content strong,
-.prose-content em,
-.prose-content code,
-.prose-content pre,
-.prose-content figcaption {
-  color: var(--foreground);
-}
-
-.prose-content a {
-  @apply text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300;
-}
-
-/* Purple/Violet themed special content */
-.poem-content {
-  white-space: pre-line;
-}
-
-.stanza {
-  @apply mb-6;
-}
-
-.poem-line {
-  @apply leading-7 text-purple-800 dark:text-purple-200;
-}
-
-.quote {
-  @apply border-l-4 pl-4 italic border-purple-400 dark:border-purple-500;
-}
-
-.quote-author {
-  @apply mt-2 text-sm text-purple-600 dark:text-purple-400;
-}
-
-.divider {
-  @apply my-8 border-t border-purple-200 dark:border-purple-700;
-}
-
-/* Purple/Violet themed callouts */
-.callout {
-  @apply my-6 p-4 rounded-lg border;
-}
-
-.callout-title {
-  @apply font-medium mb-2;
-}
-
-.callout-body {
-  @apply text-sm;
-}
-
-.callout-info {
-  @apply border-purple-200 bg-purple-50 dark:border-purple-700 dark:bg-purple-900/30;
-}
-
-.callout-success {
-  @apply border-emerald-200 bg-emerald-50 dark:border-emerald-700 dark:bg-emerald-900/30;
-}
-
-.callout-warning {
-  @apply border-amber-200 bg-amber-50 dark:border-amber-700 dark:bg-amber-900/30;
-}
-
-.callout-error {
-  @apply border-rose-200 bg-rose-50 dark:border-rose-700 dark:bg-rose-900/30;
-}
-
-/* Purple/Violet themed forms */
-.sortbar {
-  @apply flex items-center;
-}
-
-.select {
-  @apply border border-purple-200 dark:border-purple-700 rounded-lg bg-white dark:bg-purple-800 text-purple-900 dark:text-purple-100 px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500;
-}
-
-/* Purple/Violet themed grid */
-.grid-cards {
-  @apply grid gap-6 sm:grid-cols-2 lg:grid-cols-3;
-}
-
-/* Purple/Violet themed links */
-a {
-  @apply text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 transition-colors;
-}
-
-/* Purple/Violet themed animations */
-@keyframes purple-float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-}
-
-@keyframes purple-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.8; }
-}
-
-@keyframes purple-shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-.animate-purple-float {
-  animation: purple-float 3s ease-in-out infinite;
-}
-
-.animate-purple-pulse {
-  animation: purple-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.animate-purple-shimmer {
-  animation: purple-shimmer 2s linear infinite;
-  background-size: 200% 100%;
-}
-
-/* Purple/Violet themed glassmorphism */
-.glass-purple {
-  @apply bg-white/20 dark:bg-purple-900/20 backdrop-blur-lg border border-purple-200/30 dark:border-purple-700/30;
-}
-
-/* Purple/Violet themed gradients */
-.bg-purple-gradient {
-  background: linear-gradient(135deg, #6B46C1 0%, #8B5CF6 50%, #A855F7 100%);
-}
-
-.bg-violet-gradient {
-  background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
-}
-
-.bg-purple-hero {
-  background: linear-gradient(135deg, #4C1D95 0%, #6B46C1 50%, #8B5CF6 100%);
-}
-
-/* Purple/Violet themed shadows */
-.shadow-purple-sm {
-  box-shadow: 0 1px 2px 0 rgba(107, 70, 193, 0.05);
-}
-
-.shadow-purple {
-  box-shadow: 0 4px 6px -1px rgba(107, 70, 193, 0.1), 0 2px 4px -1px rgba(107, 70, 193, 0.06);
-}
-
-.shadow-purple-md {
-  box-shadow: 0 10px 15px -3px rgba(107, 70, 193, 0.1), 0 4px 6px -2px rgba(107, 70, 193, 0.05);
-}
-
-.shadow-purple-lg {
-  box-shadow: 0 20px 25px -5px rgba(107, 70, 193, 0.1), 0 10px 10px -5px rgba(107, 70, 193, 0.04);
-}
-
-.shadow-violet-glow {
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-}
+@media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } * { transition:none !important; } }
