@@ -7,8 +7,11 @@ const cases = [
   ["projects", "projects"], ["Show me your work", "projects"], ["What have you built?", "projects"],
   ["services", "services"], ["Can you build a website for me?", "services"],
   ["experience", "experience"], ["Where have you worked?", "experience"],
+  ["Who do you work for?", "experience"], ["Tell me about Sampo", "experience"],
   ["contact", "contact"], ["What's your email?", "contact"], ["How can I reach you?", "contact"],
+  ["What is your phone number?", "contact"],
   ["interests", "interests"], ["What do you love?", "interests"], ["What are your hobbies?", "interests"],
+  ["Do you like cinema?", "interests"], ["Can we talk about psychology?", "interests"],
   ["help", "help"], ["clear", "clear"], ["Explain quantum chromodynamics", "unknown"],
 ];
 

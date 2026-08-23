@@ -66,21 +66,22 @@ export default function Terminal({ knowledge }: { knowledge: KnowledgeBase }) {
     <section className="terminal-shell" aria-label="Krishna interactive terminal">
       <header className="terminal-header"><div><span className="terminal-mark">K</span><strong>SYNC://KRISHNA</strong></div><p><span aria-hidden="true" /> ONLINE</p></header>
       <div className="terminal-session">
-        <div className="welcome">
-          <p className="system-line">SYSTEM READY <span>v1.0.0-local</span></p>
-          <h1>Don&apos;t browse my portfolio.<br /><em>Ask it.</em></h1>
-          <p>Hello. I&apos;m Krishna&apos;s interactive digital interface.</p>
-          <p>Ask what you want to know, or type <code>help</code> to inspect available commands.</p>
-          {!entries.length && <SuggestionChips intents={DEFAULT_SUGGESTIONS} knowledge={knowledge} onSelect={execute} />}
+        <div className="terminal-scroll">
+          <div className="welcome">
+            <p className="system-line">SYNC://SESSION ESTABLISHED <span>v1.0.0-local</span></p>
+            <h1>Don&apos;t browse my portfolio. <em>Ask it.</em></h1>
+            <p>Hello. I&apos;m Krishna&apos;s interactive digital interface.</p>
+            <p>Type a question, or run <code>help</code> to list available commands.</p>
+            {!entries.length && <SuggestionChips intents={DEFAULT_SUGGESTIONS} knowledge={knowledge} onSelect={execute} />}
+          </div>
+          <div className="history" aria-live="polite">
+            {entries.map((entry) => <article className="history-entry" key={entry.id}><p className="query"><span>visitor@krishna:~$</span> {entry.query}</p><TerminalOutput entry={entry} /><SuggestionChips intents={entry.suggestions} knowledge={knowledge} onSelect={execute} /></article>)}
+          </div>
+          <div ref={endRef} />
         </div>
-        <div className="history" aria-live="polite">
-          {entries.map((entry) => <article className="history-entry" key={entry.id}><p className="query"><span>visitor@krishna:~$</span> {entry.query}</p><TerminalOutput entry={entry} /><SuggestionChips intents={entry.suggestions} knowledge={knowledge} onSelect={execute} /></article>)}
-        </div>
-        <div ref={endRef} />
         <TerminalInput onSubmit={execute} commandHistory={commands} />
       </div>
       <div className="sr-only" role="status" aria-live="polite">{announcement}</div>
-      <footer className="terminal-footer"><span>LOCAL INTENT ENGINE</span><span>NO AI · NO TRACKING · SESSION EPHEMERAL</span></footer>
     </section>
   );
 }
