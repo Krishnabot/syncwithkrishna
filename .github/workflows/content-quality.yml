@@ -1,4 +1,4 @@
-name: Content quality
+name: Terminal quality
 
 on:
   push:
@@ -25,14 +25,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Validate Markdown content
-        run: npm run content:check
+      - name: Validate terminal intents
+        run: npm run intent:check
 
-      - name: Lint Markdown content path
-        run: npx eslint src/lib/content.ts scripts/check-markdown-content.mjs 'src/app/posts/[category]/[slug]/page.tsx'
+      - name: Lint
+        run: npm run lint
 
       - name: Type-check
-        run: npx tsc --noEmit
+        run: npm run typecheck
 
       - name: Build
         run: npm run build
