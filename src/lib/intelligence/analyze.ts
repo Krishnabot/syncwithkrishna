@@ -30,7 +30,7 @@ function recognizeEntities(text: string): Entity[] {
   return entities.filter((entity, index, all) => all.findIndex((candidate) => candidate.id === entity.id && candidate.kind === entity.kind) === index);
 }
 
-const COMMANDS: Record<string, Intent> = { whoami: "profile", about: "profile", skills: "skills", projects: "projects", experience: "experience", services: "services", contact: "contact", interests: "interests", help: "help", clear: "clear", home: "home", download: "download" };
+const COMMANDS: Record<string, Intent> = { whoami: "profile", about: "profile", skills: "skills", projects: "projects", experience: "experience", services: "services", contact: "contact", interests: "interests", help: "help", clear: "clear", home: "home", download: "download", inspect: "inspect", related: "related", trace: "trace", search: "search", stats: "stats", timeline: "timeline", graph: "graph", evidence: "evidence" };
 
 export function analyzeQuestion(input: string, context: SessionContext): QuestionAnalysis {
   const normalized = normalize(input);

@@ -1,3 +1,6 @@
+"use client";
+
+import { lazy, Suspense } from "react";
 import type { KnowledgeRecord, TerminalEntry } from "@/lib/terminal-types";
 import { CV_DOWNLOAD_URL, CV_VIEW_URL } from "@/lib/cv";
 
@@ -6,7 +9,11 @@ const HELP_ROWS = [
   ["experience", "Professional experience"], ["services", "What Krishna can build"], ["contact", "Get in touch"],
   ["interests", "Beyond programming"], ["home", "Return to welcome"], ["clear", "Clear terminal"],
   ["download", "Download Krishna's CV"],
+  ["inspect <entity>", "Inspect a graph entity"], ["related <entity>", "Show direct relationships"],
+  ["trace <entity>", "Trace evidence paths"], ["search <term>", "Search connected knowledge"],
+  ["timeline", "Chronological work view"], ["stats", "Knowledge graph health"], ["graph", "Open relationship map"],
 ] as const;
+const GraphExplorer = lazy(() => import("./GraphExplorer"));
 
 function SafeLink({ label, url }: { label: string; url: string }) {
   const external = url.startsWith("http");
@@ -34,7 +41,7 @@ export default function TerminalOutput({ entry }: { entry: TerminalEntry }) {
   if (entry.intent === "download") return <div className="record"><p className="record-heading">[download://cv-requested]</p><p className="summary">CV download started in a new tab.</p><a className="terminal-link" href={CV_DOWNLOAD_URL} target="_blank" rel="noreferrer">-&gt; download CV</a><a className="terminal-link" href={CV_VIEW_URL} target="_blank" rel="noreferrer">-&gt; open CV preview</a></div>;
   if (entry.intelligence) {
     const isError = entry.intelligence.kind === "unknown";
-    return <div className={`record intelligence ${isError ? "unknown" : ""}`}><p className="record-heading">{entry.intelligence.heading}</p>{entry.intelligence.lines.map((line, index) => <p className={index === 0 ? "summary" : undefined} key={`${index}-${line}`}>{line}</p>)}</div>;
+    return <div className={`record intelligence ${isError ? "unknown" : ""}`}><p className="record-heading">{entry.intelligence.heading}</p>{entry.intelligence.lines.map((line, index) => <p className={index === 0 ? "summary" : undefined} key={`${index}-${line}`}>{line}</p>)}{entry.intelligence.kind === "graph" && <Suspense fallback={<p>Loading local graph…</p>}><GraphExplorer initialFocusId={entry.intelligence.graphFocusId ?? "person:krishna"} /></Suspense>}</div>;
   }
   if (entry.intent === "unknown") return <div className="record unknown"><p className="record-heading">[error://query-not-resolved]</p><p className="summary">{entry.message}</p></div>;
   if (entry.record) return <KnowledgeResponse record={entry.record} />;
