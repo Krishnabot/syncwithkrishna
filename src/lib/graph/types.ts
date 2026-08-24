@@ -1,5 +1,5 @@
 export type KnowledgeNodeType = "person" | "technology" | "project" | "company" | "role" | "service" | "domain" | "interest";
-export type KnowledgeRelation = "hasSkill" | "contributedTo" | "workedAt" | "workedAs" | "uses" | "belongsTo" | "associatedWith" | "provides" | "interestedIn" | "supports" | "demonstrates";
+export type KnowledgeRelation = "hasSkill" | "contributedTo" | "workedAt" | "workedAs" | "uses" | "belongsTo" | "associatedWith" | "provides" | "interestedIn" | "supports" | "demonstrates" | "professionalEvidence";
 export type ClaimOrigin = "explicit" | "derived";
 export type Provenance = { sourceId: string; sourceType: "content" | "structured-data"; field?: string };
 export type NodeMetadata = { category?: string; level?: string; professional?: boolean; startDate?: string; endDate?: string; ongoing?: boolean };

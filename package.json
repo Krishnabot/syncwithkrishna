@@ -12,6 +12,7 @@
     "intent:check": "node --experimental-strip-types scripts/check-intents.mjs",
     "intelligence:check": "node --experimental-strip-types scripts/check-intelligence.mjs",
     "graph:check": "node --experimental-strip-types scripts/check-graph.mjs",
+    "reasoning:check": "node --experimental-strip-types scripts/check-reasoning.mjs",
     "validate:knowledge": "node --experimental-strip-types scripts/validate-knowledge.mjs"
   },
   "dependencies": {
