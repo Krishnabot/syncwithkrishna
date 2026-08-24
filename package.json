@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "intent:check": "node --experimental-strip-types scripts/check-intents.mjs"
+    "intent:check": "node --experimental-strip-types scripts/check-intents.mjs",
+    "intelligence:check": "node --experimental-strip-types scripts/check-intelligence.mjs"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
