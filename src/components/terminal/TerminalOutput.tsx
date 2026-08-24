@@ -32,6 +32,10 @@ function KnowledgeResponse({ record }: { record: KnowledgeRecord }) {
 export default function TerminalOutput({ entry }: { entry: TerminalEntry }) {
   if (entry.intent === "help") return <div className="record help"><p className="record-heading">[system://available-commands]</p><dl>{HELP_ROWS.map(([command, description]) => <div key={command}><dt>{command}</dt><dd>{description}</dd></div>)}</dl><p className="summary">You can also ask questions naturally.</p></div>;
   if (entry.intent === "download") return <div className="record"><p className="record-heading">[download://cv-requested]</p><p className="summary">CV download started in a new tab.</p><a className="terminal-link" href={CV_DOWNLOAD_URL} target="_blank" rel="noreferrer">-&gt; download CV</a><a className="terminal-link" href={CV_VIEW_URL} target="_blank" rel="noreferrer">-&gt; open CV preview</a></div>;
+  if (entry.intelligence) {
+    const isError = entry.intelligence.kind === "unknown";
+    return <div className={`record intelligence ${isError ? "unknown" : ""}`}><p className="record-heading">{entry.intelligence.heading}</p>{entry.intelligence.lines.map((line, index) => <p className={index === 0 ? "summary" : undefined} key={`${index}-${line}`}>{line}</p>)}</div>;
+  }
   if (entry.intent === "unknown") return <div className="record unknown"><p className="record-heading">[error://query-not-resolved]</p><p className="summary">{entry.message}</p></div>;
   if (entry.record) return <KnowledgeResponse record={entry.record} />;
   return null;
