@@ -13,6 +13,12 @@ export type Intent = KnowledgeIntent | "help" | "download" | "clear" | "home" | 
 export type KnowledgeLink = { label: string; url: string };
 export type KnowledgeGroup = { title: string; items: string[] };
 export type KnowledgeProject = { name: string; description: string; technologies: string[]; status?: string; links?: KnowledgeLink[] };
+export type IntelligenceResponse = {
+  kind: "answer" | "projects" | "comparison" | "capability" | "unknown" | "outside-domain";
+  heading: string;
+  lines: string[];
+  projectNames?: string[];
+};
 export type KnowledgeRecord = {
   id: KnowledgeIntent;
   title: string;
@@ -29,4 +35,4 @@ export type KnowledgeRecord = {
 };
 export type KnowledgeBase = Record<KnowledgeIntent, KnowledgeRecord>;
 export type IntentResolution = { intent: Intent; confidence: number; matchedTerms: string[] };
-export type TerminalEntry = { id: number; query: string; intent: Intent; record?: KnowledgeRecord; confidence: number; suggestions: KnowledgeIntent[]; message?: string };
+export type TerminalEntry = { id: number; query: string; intent: Intent; record?: KnowledgeRecord; confidence: number; suggestions: KnowledgeIntent[]; message?: string; intelligence?: IntelligenceResponse };

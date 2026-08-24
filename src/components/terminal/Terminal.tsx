@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { resolveIntent } from "@/lib/intent-engine";
 import { CV_DOWNLOAD_URL } from "@/lib/cv";
+import { answerQuestion, EMPTY_CONTEXT, type SessionContext } from "@/lib/intelligence";
 import type { KnowledgeBase, KnowledgeIntent, TerminalEntry } from "@/lib/terminal-types";
 import BootSequence from "./BootSequence";
 import SuggestionChips from "./SuggestionChips";
@@ -27,6 +27,7 @@ export default function Terminal({ knowledge }: { knowledge: KnowledgeBase }) {
   const [announcement, setAnnouncement] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
   const nextId = useRef(1);
+  const context = useRef<SessionContext>(EMPTY_CONTEXT);
   const completeBoot = useCallback(() => setBooted(true), []);
 
   useEffect(() => {
@@ -43,29 +44,32 @@ export default function Terminal({ knowledge }: { knowledge: KnowledgeBase }) {
       return;
     }
     setCommands((current) => [...current, cleaned]);
-    const result = resolveIntent(cleaned);
-    if (result.intent === "clear" || result.intent === "home") {
+    const result = answerQuestion(cleaned, knowledge, context.current);
+    if (result.analysis.intent === "clear" || result.analysis.intent === "home") {
       setEntries([]);
-      setAnnouncement(result.intent === "clear" ? "Terminal history cleared." : "Returned to terminal home.");
+      context.current = EMPTY_CONTEXT;
+      setAnnouncement(result.analysis.intent === "clear" ? "Terminal history cleared." : "Returned to terminal home.");
       return;
     }
-    if (result.intent === "download") {
+    if (result.analysis.intent === "download") {
       const link = document.createElement("a");
       link.href = CV_DOWNLOAD_URL;
       link.target = "_blank";
       link.rel = "noreferrer";
       link.click();
     }
-    const knowledgeIntent = result.intent as KnowledgeIntent;
+    context.current = result.nextContext;
+    const knowledgeIntent = result.analysis.intent as KnowledgeIntent;
     const hasRecord = Object.prototype.hasOwnProperty.call(knowledge, knowledgeIntent);
     const entry: TerminalEntry = {
-      id: nextId.current++, query: cleaned, intent: result.intent, confidence: result.confidence,
-      record: hasRecord ? knowledge[knowledgeIntent] : undefined,
+      id: nextId.current++, query: cleaned, intent: result.analysis.intent, confidence: result.analysis.confidence,
+      record: hasRecord && !result.response ? knowledge[knowledgeIntent] : undefined,
       suggestions: hasRecord ? CONTEXTUAL[knowledgeIntent] : DEFAULT_SUGGESTIONS,
-      message: result.intent === "unknown" ? "THERE IS AS YET INSUFFICIENT DATA FOR A MEANINGFUL ANSWER" : undefined,
+      message: result.analysis.intent === "unknown" ? "THERE IS AS YET INSUFFICIENT DATA FOR A MEANINGFUL ANSWER" : undefined,
+      intelligence: result.response,
     };
     setEntries((current) => [...current, entry]);
-    setAnnouncement(result.intent === "unknown" ? "Question not understood. Suggestions are available." : "Response loaded: " + result.intent);
+    setAnnouncement(result.analysis.intent === "unknown" ? "Question not understood. Suggestions are available." : "Response loaded: " + result.analysis.intent);
   }, [knowledge]);
 
   if (!booted) return <BootSequence onComplete={completeBoot} />;
