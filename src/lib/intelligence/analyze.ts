@@ -30,7 +30,7 @@ function recognizeEntities(text: string): Entity[] {
   return entities.filter((entity, index, all) => all.findIndex((candidate) => candidate.id === entity.id && candidate.kind === entity.kind) === index);
 }
 
-const COMMANDS: Record<string, Intent> = { whoami: "profile", about: "profile", skills: "skills", projects: "projects", experience: "experience", services: "services", contact: "contact", interests: "interests", help: "help", clear: "clear", home: "home", download: "download" };
+const COMMANDS: Record<string, Intent> = { whoami: "profile", about: "profile", skills: "skills", projects: "projects", experience: "experience", services: "services", contact: "contact", interests: "interests", help: "help", clear: "clear", home: "home", download: "download", inspect: "inspect", related: "related", trace: "trace", search: "search", stats: "stats", timeline: "timeline", graph: "graph", evidence: "evidence" };
 
 export function analyzeQuestion(input: string, context: SessionContext): QuestionAnalysis {
   const normalized = normalize(input);
@@ -51,6 +51,7 @@ export function analyzeQuestion(input: string, context: SessionContext): Questio
   if (!command && hasCapabilityLanguage && intent === "unknown") intent = "skills";
   if (!command && hasCapabilityLanguage && /\b(professional|professionally|experience|worked)\b/.test(normalized)) intent = "experience";
   if (!command && referencesContext && context.resultProjects.length && entities.some((entity) => entity.kind === "technology" || entity.kind === "domain")) intent = "projects";
+  if (!command && referencesContext && context.resultProjects.length && /\b(which|those|them|ones)\b/.test(normalized)) intent = "projects";
   if (referencesContext && intent === "unknown") intent = context.previousIntent ?? "projects";
   const constraintText = normalized.match(/(?:using|use|with|know)\s+(.+)$/)?.[1]?.replace(/\b(projects?|professionally|professional|experience|too)\b/g, "").trim();
   const cliTerms = [...normalized.matchAll(/--tech\s+([a-z0-9.\-]+)/g)].map((match) => match[1]);
@@ -61,7 +62,7 @@ export function analyzeQuestion(input: string, context: SessionContext): Questio
     const unsupported = normalized.match(/(?:professional(?:ly)?\s+)([a-z][a-z0-9. +#-]+?)\s+(?:experience|development)$/)?.[1] ?? normalized.match(/have\s+(?:you\s+)?(?:professional\s+)?([a-z][a-z0-9. +#-]+?)\s+experience$/)?.[1];
     if (unsupported) unresolvedTerms.push(unsupported.trim());
   }
-  const questionType = command ? (normalized.includes("--") ? "filter" : "command") : comparison ? "comparison" : referencesContext ? "follow-up" : hasProjectLanguage ? "filter" : intent === "services" && /\b(build|startup|help)\b/.test(normalized) ? "recommendation" : hasCapabilityLanguage ? "capability" : intent === "contact" ? "contact" : intent === "interests" ? "personal" : intent !== "unknown" ? "lookup" : "unknown";
+  const questionType = /^(why|why is that|how do you know|what(?:s| is) the evidence|show me the evidence)$/.test(normalized) ? "reason" : command ? (normalized.includes("--") ? "filter" : "command") : comparison ? "comparison" : referencesContext ? "follow-up" : hasProjectLanguage ? "filter" : intent === "services" && /\b(build|startup|help)\b/.test(normalized) ? "recommendation" : hasCapabilityLanguage ? "capability" : intent === "contact" ? "contact" : intent === "interests" ? "personal" : intent !== "unknown" ? "lookup" : "unknown";
   const modifiers = ["professional", "backend", "frontend", "primary", "beginner"].filter((modifier) => normalized.includes(modifier));
   return { original: input, normalized, intent, questionType, confidence: command ? 1 : intent === "unknown" ? 0 : entities.length ? 0.9 : 0.72, entities, includedEntities: entities, excludedEntities, unresolvedTerms, modifiers, operator: /\sor\s|either/.test(normalized) ? "or" : "and", referencesContext };
 }
