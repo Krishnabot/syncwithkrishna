@@ -1,0 +1,13 @@
+import { PROJECT_FACTS, TECHNOLOGIES } from "../intelligence/knowledge.ts";
+import type { KnowledgeGraph, ValidationIssue, ValidationReport } from "./types.ts";
+
+const validDate = (value?: string) => !value || /^\d{4}-(0[1-9]|1[0-2])$/.test(value);
+export function validateKnowledgeGraph(graph: KnowledgeGraph): ValidationReport {
+  const issues: ValidationIssue[] = []; const ids = new Set<string>(); const edgeIds = new Set<string>();
+  for (const node of graph.nodes) { if (ids.has(node.id)) issues.push({ severity: "error", code: "duplicate-node", message: `Duplicate node ID: ${node.id}` }); ids.add(node.id); if (!node.label.trim()) issues.push({ severity: "error", code: "missing-label", message: `Missing label: ${node.id}` }); }
+  for (const edge of graph.edges) { if (edgeIds.has(edge.id)) issues.push({ severity: "error", code: "duplicate-edge", message: `Duplicate edge ID: ${edge.id}` }); edgeIds.add(edge.id); if (!ids.has(edge.from) || !ids.has(edge.to)) issues.push({ severity: "error", code: "orphan-edge", message: `Unresolved edge: ${edge.id}` }); if (edge.from === edge.to) issues.push({ severity: "error", code: "self-edge", message: `Invalid self relationship: ${edge.id}` }); if (!edge.provenance.sourceId) issues.push({ severity: "error", code: "missing-provenance", message: `Missing provenance: ${edge.id}` }); }
+  const technologyIds = new Set(TECHNOLOGIES.map((technology) => technology.id));
+  for (const project of PROJECT_FACTS) { for (const technology of project.technologies) if (!technologyIds.has(technology)) issues.push({ severity: "error", code: "invalid-technology", message: `${project.name} references unknown technology ${technology}` }); if (!validDate(project.startDate) || !validDate(project.endDate)) issues.push({ severity: "error", code: "invalid-date", message: `Malformed date on ${project.name}` }); if (project.startDate && project.endDate && project.startDate > project.endDate) issues.push({ severity: "error", code: "date-order", message: `End precedes start on ${project.name}` }); }
+  for (const technology of TECHNOLOGIES.filter((item) => item.level === "professional" || item.level === "primary")) { const supported = graph.edges.some((edge) => edge.relation === "uses" && edge.to === `technology:${technology.id}` && graph.nodeById.get(edge.from)?.metadata.professional); if (!supported) issues.push({ severity: "warning", code: "weak-professional-evidence", message: `${technology.label} is marked ${technology.level} but has no professional project evidence path.` }); }
+  return { valid: !issues.some((issue) => issue.severity === "error"), nodeCount: graph.nodes.length, edgeCount: graph.edges.length, provenanceCount: graph.edges.filter((edge) => edge.provenance.sourceId).length, issues };
+}

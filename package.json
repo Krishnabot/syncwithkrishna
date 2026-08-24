@@ -10,7 +10,9 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "intent:check": "node --experimental-strip-types scripts/check-intents.mjs",
-    "intelligence:check": "node --experimental-strip-types scripts/check-intelligence.mjs"
+    "intelligence:check": "node --experimental-strip-types scripts/check-intelligence.mjs",
+    "graph:check": "node --experimental-strip-types scripts/check-graph.mjs",
+    "validate:knowledge": "node --experimental-strip-types scripts/validate-knowledge.mjs"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

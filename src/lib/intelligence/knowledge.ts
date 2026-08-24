@@ -1,5 +1,6 @@
 export type TechnologyFact = { id: string; label: string; aliases: string[]; category: "frontend" | "backend" | "data" | "cloud" | "testing" | "tool"; level: "primary" | "professional" | "project" | "listed" | "beginner" };
-export type ProjectFact = { name: string; aliases: string[]; company?: string; technologies: string[]; domains: string[]; capabilities: string[]; professional: boolean };
+export type ProjectFact = { name: string; aliases: string[]; company?: string; technologies: string[]; domains: string[]; capabilities: string[]; professional: boolean; startDate?: string; endDate?: string; ongoing?: boolean };
+export type NamedFact = { id: string; label: string; aliases: string[]; relatedDomains?: string[] };
 
 export const TECHNOLOGIES: TechnologyFact[] = [
   { id: "react", label: "React", aliases: ["react", "reactjs", "react.js"], category: "frontend", level: "primary" },
@@ -29,13 +30,26 @@ export const TECHNOLOGIES: TechnologyFact[] = [
 ];
 
 export const PROJECT_FACTS: ProjectFact[] = [
-  { name: "Golf Buddy & Japanese Goods Commerce", aliases: ["golf buddy", "japanese goods", "sampo"], company: "Sampo Development", technologies: ["solidus", "rails", "flutter", "sqlite"], domains: ["social", "e-commerce", "mobile", "full-stack"], capabilities: ["registration", "search", "event scheduling", "checkout"], professional: true },
-  { name: "Educational Games Platform", aliases: ["educational games", "unity", "uni-ty"], company: "UNI-TY INC.", technologies: ["react", "node", "rails", "createjs", "docker", "git"], domains: ["education", "gaming", "frontend", "backend", "full-stack"], capabilities: ["games", "apis", "analytics", "performance"], professional: true },
-  { name: "Fluid Digital Engagement Platform", aliases: ["fluid", "daanfe"], company: "Daanfe Software Labs", technologies: ["react", "redux", "javascript", "rails", "postgresql", "redis"], domains: ["marketing", "frontend", "backend", "full-stack", "analytics"], capabilities: ["feedback", "analytics", "third-party integrations"], professional: true },
-  { name: "PopMenu Hospitality Platform", aliases: ["popmenu", "pop menu"], technologies: ["react", "rails", "postgresql", "aws", "stripe"], domains: ["hospitality", "e-commerce", "frontend", "backend", "full-stack"], capabilities: ["reservations", "payments", "menus", "scalability"], professional: true },
-  { name: "Juubix Web3 Ecosystem", aliases: ["juubix"], technologies: ["rails", "react", "postgresql"], domains: ["web3", "fintech", "marketplace", "frontend", "backend", "full-stack"], capabilities: ["onboarding", "rbac", "dashboards", "apis"], professional: true },
-  { name: "Kairos Health Platform", aliases: ["kairos", "kairos health"], technologies: ["javascript", "typescript", "node", "react", "mysql"], domains: ["healthcare", "frontend", "backend", "full-stack"], capabilities: ["insurance", "appointments", "third-party integrations"], professional: true },
+  { name: "Golf Buddy & Japanese Goods Commerce", aliases: ["golf buddy", "japanese goods", "sampo"], company: "Sampo Development", technologies: ["solidus", "rails", "flutter", "sqlite"], domains: ["social", "e-commerce", "mobile"], capabilities: ["registration", "search", "event scheduling", "checkout"], professional: true, startDate: "2024-12", ongoing: true },
+  { name: "Educational Games Platform", aliases: ["educational games", "unity", "uni-ty"], company: "UNI-TY INC.", technologies: ["react", "node", "rails", "createjs", "docker", "git"], domains: ["education", "gaming", "frontend", "backend"], capabilities: ["games", "apis", "analytics", "performance"], professional: true, startDate: "2024-02", endDate: "2024-12" },
+  { name: "Fluid Digital Engagement Platform", aliases: ["fluid", "daanfe"], company: "Daanfe Software Labs", technologies: ["react", "redux", "javascript", "rails", "postgresql", "redis"], domains: ["marketing", "frontend", "backend", "analytics"], capabilities: ["feedback", "analytics", "third-party integrations"], professional: true, startDate: "2023-01", endDate: "2024-01" },
+  { name: "PopMenu Hospitality Platform", aliases: ["popmenu", "pop menu"], technologies: ["react", "rails", "postgresql", "aws", "stripe"], domains: ["hospitality", "e-commerce", "frontend", "backend"], capabilities: ["reservations", "payments", "menus", "scalability"], professional: true, startDate: "2022-06", endDate: "2022-12" },
+  { name: "Juubix Web3 Ecosystem", aliases: ["juubix"], technologies: ["rails", "react", "postgresql"], domains: ["web3", "fintech", "marketplace", "frontend", "backend"], capabilities: ["onboarding", "rbac", "dashboards", "apis"], professional: true, startDate: "2020-09", endDate: "2022-11" },
+  { name: "Kairos Health Platform", aliases: ["kairos", "kairos health"], technologies: ["javascript", "typescript", "node", "react", "mysql"], domains: ["healthcare", "frontend", "backend"], capabilities: ["insurance", "appointments", "third-party integrations"], professional: true, startDate: "2018-09", endDate: "2021-01" },
   { name: "Sync With Krishna", aliases: ["sync with krishna", "this website", "this site", "terminal"], technologies: ["next", "react", "typescript", "tailwind"], domains: ["personal", "frontend"], capabilities: ["terminal", "content", "intent resolution"], professional: false },
+];
+
+export const SERVICE_FACTS: NamedFact[] = [
+  { id: "full-stack-development", label: "Full-Stack Product Development", aliases: ["full stack development", "web application"], relatedDomains: ["frontend", "backend"] },
+  { id: "mobile-interactive", label: "Mobile & Interactive Products", aliases: ["mobile development", "interactive products"], relatedDomains: ["mobile", "gaming"] },
+  { id: "commerce-integrations", label: "Commerce & Integrations", aliases: ["commerce", "integrations", "payments"], relatedDomains: ["e-commerce", "backend"] },
+  { id: "product-quality", label: "Product Quality", aliases: ["performance", "testing", "quality"], relatedDomains: ["frontend", "backend"] },
+];
+
+export const INTEREST_FACTS: NamedFact[] = [
+  { id: "literature", label: "Literature", aliases: ["literature", "books", "reading"] }, { id: "philosophy", label: "Philosophy", aliases: ["philosophy"] },
+  { id: "cinema", label: "Cinema", aliases: ["cinema", "films", "movies"] }, { id: "psychology", label: "Psychology", aliases: ["psychology"] },
+  { id: "writing", label: "Writing & Poetry", aliases: ["writing", "poetry", "poems"] }, { id: "content-creation", label: "Content Creation", aliases: ["content creation", "tiktok"] },
 ];
 
 export const DOMAIN_ALIASES: Record<string, string[]> = {
