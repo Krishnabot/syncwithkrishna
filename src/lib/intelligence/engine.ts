@@ -16,14 +16,17 @@ function matchingProjects(analysis: QuestionAnalysis, context: SessionContext) {
   const technologies = analysis.entities.filter((entity) => entity.kind === "technology").map((entity) => entity.id);
   const domains = analysis.entities.filter((entity) => entity.kind === "domain").map((entity) => entity.id);
   const named = analysis.entities.filter((entity) => entity.kind === "project").map((entity) => entity.id);
-  const base = analysis.referencesContext && context.resultProjects.length ? PROJECT_FACTS.filter((project) => context.resultProjects.includes(project.name)) : PROJECT_FACTS;
+  const evidenceProjects = context.lastEvidencePaths.flatMap((path) => path.nodes.filter((node) => node.type === "project").map((node) => node.label));
+  const contextualProjects = context.resultProjects.length ? context.resultProjects : evidenceProjects;
+  const base = analysis.referencesContext && contextualProjects.length ? PROJECT_FACTS.filter((project) => contextualProjects.includes(project.name)) : PROJECT_FACTS;
   return base.filter((project) => {
     const techMatch = !technologies.length || (analysis.operator === "or" ? technologies.some((id) => project.technologies.includes(id)) : technologies.every((id) => project.technologies.includes(id)));
     const categories = project.technologies.map((technology) => TECHNOLOGIES.find((item) => item.id === technology)?.category);
     const domainMatch = !domains.length || domains.every((id) => id === "database" ? categories.includes("data") : id === "full-stack" ? categories.includes("frontend") && categories.includes("backend") : project.domains.includes(id));
     const nameMatch = !named.length || named.includes(project.name);
     const excluded = analysis.excludedEntities.some((entity) => project.technologies.includes(entity.id) || project.domains.includes(entity.id));
-    return techMatch && domainMatch && nameMatch && !excluded;
+    const professionalMatch = !analysis.modifiers.includes("professional") || project.professional;
+    return techMatch && domainMatch && nameMatch && professionalMatch && !excluded;
   });
 }
 
@@ -119,7 +122,7 @@ export function answerQuestion(input: string, knowledge: KnowledgeBase, context:
     response = earlier ? { kind: "timeline", heading: "[temporal://previous-work]", lines: [`Before ${target?.name}, the nearest documented earlier work is ${earlier.name}.`, `${earlier.startDate} — ${earlier.endDate}.`] } : { kind: "unknown", heading: "[temporal://insufficient-data]", lines: ["There is not enough dated information to identify earlier work."] };
   }
   else if (/\b(full stack|full-stack|fullstack)\b/.test(analysis.normalized) && /\b(are you|why|consider|say)\b/.test(analysis.normalized)) {
-    const fullStackPaths = findPaths(GRAPH, "person:krishna", "domain:full-stack", 2, 5).filter((path) => path.edges.some((edge) => edge.relation === "demonstrates"));
+    const fullStackPaths = findPaths(GRAPH, "person:krishna", "domain:full-stack", 2, 8).filter((path) => path.edges.some((edge) => edge.relation === "demonstrates") && (!context.resultProjects.length || path.nodes.some((node) => context.resultProjects.includes(node.label)))).slice(0, 5);
     response = fullStackPaths.length ? { kind: "capability", heading: "[reasoning://full-stack]", lines: ["Yes — documented projects combine frontend and backend technologies.", `Supporting projects: ${fullStackPaths.map((path) => path.nodes.find((node) => node.type === "project")?.label).filter(Boolean).join("; ")}.`, "This is a derived claim based on explicit project technology relationships."] } : { kind: "unknown", heading: "[reasoning://insufficient-evidence]", lines: ["The graph does not contain enough evidence for that full-stack claim."] };
     evidencePaths = fullStackPaths;
   }
@@ -154,6 +157,7 @@ export function answerQuestion(input: string, knowledge: KnowledgeBase, context:
 
   const technologyEntities = analysis.entities.filter((entity) => entity.kind === "technology");
   if (technologyEntities.length && response?.kind === "capability") evidencePaths = technologyEntities.flatMap((entity) => getProfessionalEvidencePaths(GRAPH, `technology:${entity.id}`, 3));
+  else if (response?.projectNames?.length) evidencePaths = response.projectNames.flatMap((name) => findPaths(GRAPH, "person:krishna", `project:${slug(name)}`, 1, 1));
   else if (response?.kind !== "evidence" && response?.kind !== "unknown" && response && evidencePaths === context.lastEvidencePaths) evidencePaths = [];
   const replacesProjectResults = analysis.intent === "projects" && (analysis.questionType === "filter" || analysis.questionType === "follow-up");
   const nextContext: SessionContext = { previousIntent: ["profile", "skills", "projects", "experience", "services", "contact", "interests"].includes(analysis.intent) ? analysis.intent as KnowledgeIntent : context.previousIntent, activeProject, activeEntity: technologyEntities[0] ? `technology:${technologyEntities[0].id}` : context.activeEntity, entities: analysis.entities.length ? analysis.entities : context.entities, resultProjects: replacesProjectResults ? resultProjects : resultProjects.length ? resultProjects : context.resultProjects, recentQueries: [...context.recentQueries, input].slice(-6), lastClaim: response?.kind === "evidence" ? context.lastClaim : response?.lines[0], lastEvidencePaths: evidencePaths, lastComparedEntities: analysis.questionType === "comparison" ? analysis.entities.map((entity) => entity.id) : context.lastComparedEntities };

@@ -24,8 +24,13 @@ assert.equal(why.response?.kind, "evidence"); assert.match(why.response?.lines.j
 const unsupported = answerQuestion("Do you professionally use Rust?", knowledge, EMPTY_CONTEXT);
 const unsupportedWhy = answerQuestion("How do you know?", knowledge, unsupported.nextContext);
 assert.equal(unsupportedWhy.response?.kind, "unknown");
+const supporting = answerQuestion("Show me the projects that support that", knowledge, capability.nextContext);
+assert.ok(supporting.response?.projectNames?.length); assert.ok(supporting.response?.projectNames?.every((name) => PROJECT_FACTS.find((project) => project.name === name)?.technologies.includes("react")));
+const professional = answerQuestion("Which of those were professional?", knowledge, supporting.nextContext);
+assert.ok(professional.response?.projectNames?.every((name) => PROJECT_FACTS.find((project) => project.name === name)?.professional));
+assert.equal(answerQuestion("why?", knowledge, professional.nextContext).response?.kind, "evidence");
 assert.match(answerQuestion("What is your current role?", knowledge, EMPTY_CONTEXT).response?.lines.join(" ") ?? "", /Sampo Development/);
 assert.match(answerQuestion("What technologies appear in your recent work?", knowledge, EMPTY_CONTEXT).response?.lines.join(" ") ?? "", /Solidus/);
 const fullStack = answerQuestion("Why do you say you're full-stack?", knowledge, EMPTY_CONTEXT);
 assert.equal(fullStack.response?.kind, "capability"); assert.ok(fullStack.nextContext.lastEvidencePaths.some((path) => path.edges.some((edge) => edge.origin === "derived")));
-console.log("Reasoning checks passed:", 13);
+console.log("Reasoning checks passed:", 16);

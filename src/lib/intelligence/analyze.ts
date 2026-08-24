@@ -51,6 +51,7 @@ export function analyzeQuestion(input: string, context: SessionContext): Questio
   if (!command && hasCapabilityLanguage && intent === "unknown") intent = "skills";
   if (!command && hasCapabilityLanguage && /\b(professional|professionally|experience|worked)\b/.test(normalized)) intent = "experience";
   if (!command && referencesContext && context.resultProjects.length && entities.some((entity) => entity.kind === "technology" || entity.kind === "domain")) intent = "projects";
+  if (!command && referencesContext && context.resultProjects.length && /\b(which|those|them|ones)\b/.test(normalized)) intent = "projects";
   if (referencesContext && intent === "unknown") intent = context.previousIntent ?? "projects";
   const constraintText = normalized.match(/(?:using|use|with|know)\s+(.+)$/)?.[1]?.replace(/\b(projects?|professionally|professional|experience|too)\b/g, "").trim();
   const cliTerms = [...normalized.matchAll(/--tech\s+([a-z0-9.\-]+)/g)].map((match) => match[1]);
